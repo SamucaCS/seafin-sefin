@@ -1,14 +1,8 @@
-/* publico_seafin.css */
-
 :root {
-    /* Paleta Verde Futurista */
     --primary-gradient: linear-gradient(135deg, #00b09b, #96c93d);
-    /* Degradê Esmeralda */
     --primary-solid: #00b09b;
     --dark-green: #064e3b;
     --light-green-bg: #f0fdf4;
-
-    /* Cores Neutras e Vidro */
     --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(255, 255, 255, 0.6);
     --text-main: #1f2937;
@@ -29,7 +23,6 @@ body {
     align-items: center;
 }
 
-/* --- Link Voltar (Estilo Tech) --- */
 .back-link {
     text-decoration: none;
     color: var(--text-muted);
@@ -46,7 +39,6 @@ body {
     transition: all 0.3s ease;
     align-self: flex-start;
     margin-left: max(0px, calc(50% - 450px));
-    /* Alinha com o container */
 }
 
 .back-link:hover {
@@ -55,7 +47,6 @@ body {
     box-shadow: 0 5px 15px rgba(0, 176, 155, 0.1);
 }
 
-/* --- Container Principal (Efeito Vidro) --- */
 .container {
     width: 100%;
     max-width: 900px;
@@ -69,7 +60,6 @@ body {
     animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* --- Cabeçalho --- */
 .public-header {
     text-align: center;
     margin-bottom: 40px;
@@ -100,7 +90,7 @@ body {
     margin-top: 8px;
 }
 
-/* --- Abas Futuristas --- */
+
 .tabs {
     display: flex;
     justify-content: center;
@@ -140,7 +130,6 @@ body {
     box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
 }
 
-/* --- Área de Filtro --- */
 .filter-box {
     background: white;
     padding: 25px;
@@ -172,7 +161,6 @@ body {
     background-color: #f8fafc;
     transition: all 0.3s;
     appearance: none;
-    /* Ícone customizado da seta */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b09b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 15px center;
@@ -186,7 +174,6 @@ body {
     box-shadow: 0 0 0 4px rgba(0, 176, 155, 0.1);
 }
 
-/* --- Card de Total (Destaque) --- */
 .total-card {
     background: var(--primary-gradient);
     color: white;
@@ -201,7 +188,6 @@ body {
     overflow: hidden;
 }
 
-/* Efeito de brilho no fundo do card */
 .total-card::before {
     content: '';
     position: absolute;
@@ -241,7 +227,6 @@ body {
     transform: rotate(-10deg);
 }
 
-/* --- Tabela Moderna --- */
 .table-container h3 {
     margin-bottom: 20px;
     font-size: 18px;
@@ -301,12 +286,10 @@ tr:last-child td {
 .text-right {
     text-align: right;
     font-family: 'Courier New', monospace;
-    /* Fonte técnica para números */
     font-weight: 700;
     color: var(--primary-solid);
 }
 
-/* --- Estados (Vazio e Footer) --- */
 .hidden {
     display: none;
 }
@@ -333,7 +316,6 @@ tr:last-child td {
     opacity: 0.7;
 }
 
-/* --- Animações --- */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -356,7 +338,6 @@ tr:last-child td {
     }
 }
 
-/* --- Responsividade --- */
 @media (max-width: 768px) {
     .container {
         padding: 25px;
