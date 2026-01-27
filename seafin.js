@@ -92,7 +92,7 @@ function carregarEscolas() {
 
 function mudarAba(tipo) {
     abaAtual = tipo;
-    cancelarEdicao(); // Limpa form se mudar de aba
+    cancelarEdicao();
 
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
@@ -113,7 +113,6 @@ function mudarAba(tipo) {
     carregarDadosTabela();
 }
 
-// --- FUNÇÃO PRINCIPAL: SALVAR (CRIA OU EDITA) ---
 async function salvarRegistro() {
     const identificador = document.getElementById('identificador').value;
     const vigencia = document.getElementById('vigencia').value;
@@ -141,7 +140,6 @@ async function salvarRegistro() {
                 .eq('id', idEmEdicao);
             error = err;
         } else {
-            // Novo Cadastro
             const { error: err } = await _supabase
                 .from('seafin_lancamentos')
                 .insert({
@@ -156,7 +154,6 @@ async function salvarRegistro() {
 
         if (error) throw error;
 
-        // Sucesso
         cancelarEdicao();
         carregarDadosTabela();
 
@@ -168,7 +165,6 @@ async function salvarRegistro() {
     }
 }
 
-// --- FUNÇÃO: PREPARAR PARA EDITAR ---
 function prepararEdicao(id, escola, qtd) {
     idEmEdicao = id;
     document.getElementById('escolaSelect').value = escola;
@@ -180,7 +176,6 @@ function prepararEdicao(id, escola, qtd) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- FUNÇÃO: CANCELAR EDIÇÃO ---
 function cancelarEdicao() {
     idEmEdicao = null;
     document.getElementById('escolaSelect').value = "";
@@ -210,7 +205,6 @@ async function carregarDadosTabela() {
     tbody.innerHTML = '';
     let somaTotal = 0;
 
-    // Ordena por nome da escola
     data.sort((a, b) => a.nome_escola.localeCompare(b.nome_escola));
 
     data.forEach(item => {
@@ -240,7 +234,6 @@ async function carregarDadosTabela() {
 async function removerItem(id) {
     if (!confirm("Remover este lançamento?")) return;
     await _supabase.from('seafin_lancamentos').delete().eq('id', id);
-    // Se estava editando o item que excluiu, cancela a edição
     if (id === idEmEdicao) cancelarEdicao();
     carregarDadosTabela();
 }
