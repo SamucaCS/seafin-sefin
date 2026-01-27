@@ -1,11 +1,8 @@
 const SUPABASE_URL = "https://gheomtxpsigcrbdfnybo.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZW9tdHhwc2lnY3JiZGZueWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjc0NDcsImV4cCI6MjA4NDg0MzQ0N30.JU2AezTf0fbzA1SX5fC3Stokm4B1cYuliwtYE224iw8";
-
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// --- LISTA DE OPÇÕES DO MENU (CONFIGURAÇÃO) ---
 const opcoesMenu = {
   diaria: [
     "Pagamento Diária",
@@ -37,7 +34,6 @@ const opcoesMenu = {
   fatura: ["Envio de Fatura", "Informação Geral", "Outros"],
 };
 
-// --- 1. LÓGICA DE ABERTURA ---
 function abrirFormulario(tipoServico) {
   if (tipoServico === "duvidas") {
     const agendaModal = document.getElementById("agendaModal");
@@ -51,7 +47,6 @@ function abrirFormulario(tipoServico) {
   }
 }
 
-// --- 2. CONFIGURA O MODAL PADRÃO ---
 function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   const titulo = document.getElementById("tituloModal");
   const areaDinamica = document.getElementById("areaDinamica");
@@ -66,9 +61,8 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   };
 
   if (titulo) titulo.innerText = titulos[tipoKey] || "Solicitação de Serviço";
-  areaDinamica.innerHTML = ""; // Limpa tudo antes de recriar
+  areaDinamica.innerHTML = "";
 
-  // 1. CRIA O SELECT (MENU DE ESCOLHA)
   let selectHtml = "";
   if (opcoesMenu[tipoKey]) {
     const options = opcoesMenu[tipoKey]
@@ -85,9 +79,7 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
         `;
   }
 
-  // 2. MONTA O CONTEÚDO
   if (horarioSelecionado) {
-    // Se for agendamento (Dúvidas)
     areaDinamica.innerHTML = `
             ${selectHtml} <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #27ae60; color: #1e8449;">
                 <strong><i class="fa-regular fa-clock"></i> Agendamento Confirmado:</strong><br>
@@ -96,7 +88,6 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
         `;
     if (inputHorario) inputHorario.value = horarioSelecionado;
   } else {
-    // Se for serviço comum (Com anexo)
     if (inputHorario) inputHorario.value = "";
     areaDinamica.innerHTML = `
             ${selectHtml} <div class="input-group">
@@ -111,14 +102,12 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   }
 }
 
-// --- 3. CONFIRMAR AGENDAMENTO ---
 function confirmarAgendamento(textoHorario) {
   fecharAgenda();
   configurarModalPadrao("duvidas", textoHorario);
   document.getElementById("modalOverlay").style.display = "flex";
 }
 
-// --- 4. FUNÇÕES DE FECHAR ---
 function fecharModal() {
   document.getElementById("modalOverlay").style.display = "none";
 }
@@ -127,7 +116,6 @@ function fecharAgenda() {
   document.getElementById("agendaModal").style.display = "none";
 }
 
-// --- 5. ENVIAR FORMULÁRIO ---
 async function enviarFormulario(e) {
   e.preventDefault();
   const submitBtn = document.querySelector(".btn-submit");
@@ -137,8 +125,6 @@ async function enviarFormulario(e) {
 
   try {
     const form = document.getElementById("formSuporte");
-
-    // Função auxiliar para pegar valor sem erro
     const getVal = (selector) => {
       const el = form.querySelector(selector);
       return el ? el.value : "";
@@ -149,12 +135,9 @@ async function enviarFormulario(e) {
     const unidade = getVal('input[placeholder="Unidade Escolar"]');
     const email = getVal('input[type="email"]');
     const observacao = getVal("textarea");
-
-    // PEGA O VALOR DO NOVO MENU
     const detalheElement = document.getElementById("detalheServico");
     const detalheSolicitacao = detalheElement ? detalheElement.value : "";
 
-    // Validação: Obriga a selecionar o menu se ele existir
     if (detalheElement && !detalheSolicitacao) {
       throw new Error("Por favor, selecione uma opção no menu de assunto.");
     }
