@@ -2,8 +2,6 @@ const SUPABASE_URL = 'https://gheomtxpsigcrbdfnybo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZW9tdHhwc2lnY3JiZGZueWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjc0NDcsImV4cCI6MjA4NDg0MzQ0N30.JU2AezTf0fbzA1SX5fC3Stokm4B1cYuliwtYE224iw8';
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Carregar dados ao abrir a tela
 window.onload = async function () {
     const { data, error } = await _supabase
         .from('indicadores')
@@ -35,7 +33,6 @@ async function salvarDados(event) {
     const btn = document.querySelector('.btn-save');
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
 
-    // Dados Federal
     const fedData = {
         tipo: 'federal',
         nao_iniciada: document.getElementById('fed-nao-iniciada').value,
@@ -45,7 +42,6 @@ async function salvarDados(event) {
         aprovada: document.getElementById('fed-aprovada').value
     };
 
-    // Dados Paulista
     const pauData = {
         tipo: 'paulista',
         nao_iniciada: document.getElementById('pau-nao-iniciada').value,
@@ -55,7 +51,6 @@ async function salvarDados(event) {
         aprovada: document.getElementById('pau-aprovada').value
     };
 
-    // Upsert (Atualiza ou Cria)
     const { error } = await _supabase
         .from('indicadores')
         .upsert([fedData, pauData], { onConflict: 'tipo' });
