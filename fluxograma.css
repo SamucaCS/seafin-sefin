@@ -1,0 +1,289 @@
+:root {
+    /* Paleta Pastel Verde */
+    --page-bg: #f0fdf4;
+    /* Fundo Verde Menta muito suave */
+    --line-color: #4ade80;
+    /* Verde Vibrante Suave para linhas */
+    --line-dark: #15803d;
+    /* Verde Floresta para setas e textos */
+
+    --box-bg: #ffffff;
+    /* Branco Puro */
+    --box-border: 2px solid #86efac;
+    /* Borda Verde Pastel */
+
+    --decision-bg: #dcfce7;
+    /* Fundo das Perguntas (Verde bem clarinho) */
+    --start-bg: #16a34a;
+    /* Fundo do Início (Verde Sólido) */
+    --start-text: #ffffff;
+
+    --text-color: #374151;
+    /* Cinza Escuro Suave para leitura */
+    --shadow-soft: 0 4px 20px rgba(22, 163, 74, 0.15);
+    /* Sombra verde difusa */
+
+    --font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--page-bg);
+    font-family: var(--font-family);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 50px;
+    color: var(--text-color);
+}
+
+/* --- NAV BAR (Mantendo profissional, mas verde) --- */
+.top-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: white;
+    /* Barra branca para ficar clean */
+    color: var(--line-dark);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    border-bottom: 3px solid var(--line-color);
+}
+
+.title-nav {
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.title-nav i {
+    color: var(--start-bg);
+}
+
+.btn-nav {
+    background: var(--decision-bg);
+    border: 1px solid var(--line-color);
+    color: var(--line-dark);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.btn-nav:hover {
+    background: var(--line-color);
+    color: white;
+}
+
+/* --- ÁREA DO DIAGRAMA --- */
+.diagram-area {
+    margin-top: 100px;
+    background: rgba(255, 255, 255, 0.6);
+    /* Vidro sutil */
+    backdrop-filter: blur(10px);
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    max-width: 1000px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #e0f2f1;
+}
+
+/* --- ESTILOS DAS CAIXAS --- */
+
+/* Início (Oval) */
+.start-oval {
+    background: var(--start-bg);
+    color: var(--start-text);
+    border: none;
+    border-radius: 50px;
+    /* Bem arredondado */
+    padding: 20px 50px;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 50px;
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 15px rgba(22, 163, 74, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.flow-grid {
+    display: grid;
+    grid-template-columns: 1fr 100px 1fr;
+    width: 100%;
+    gap: 10px;
+    position: relative;
+}
+
+.flow-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Caixas de Decisão (Perguntas) */
+.decision-box {
+    background: var(--decision-bg);
+    border: 2px solid var(--line-color);
+    color: var(--line-dark);
+    padding: 12px 20px;
+    font-weight: 700;
+    border-radius: 12px;
+    margin-bottom: 5px;
+    width: 80%;
+    text-align: center;
+    z-index: 2;
+}
+
+/* Caixas de Processo (Ações) */
+.process-box {
+    background: var(--box-bg);
+    border: 2px solid #cbd5e1;
+    /* Cinza claro suave */
+    border-left: 5px solid var(--line-color);
+    /* Detalhe verde na lateral */
+    padding: 18px;
+    margin: 15px 0;
+    width: 80%;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s;
+}
+
+.process-box:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-color);
+}
+
+.process-box.final-box {
+    border: 2px solid var(--line-dark);
+    background: var(--decision-bg);
+    color: var(--line-dark);
+    font-weight: 800;
+}
+
+/* --- SETAS CSS (Verdes) --- */
+.arrow-down {
+    width: 0;
+    height: 30px;
+    border-left: 3px solid var(--line-dark);
+    /* Linha mais fina e escura */
+    position: relative;
+    margin: -2px 0;
+    z-index: 1;
+    opacity: 0.8;
+}
+
+.arrow-down::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -5px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid var(--line-dark);
+}
+
+/* --- LOOP DE CORREÇÃO (Seta curva esquerda) --- */
+.process-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.loop-line {
+    position: absolute;
+    top: 60px;
+    bottom: 130px;
+    left: -25px;
+    width: 50%;
+    /* Borda Verde Pastel Escuro */
+    border-left: 5px solid var(--line-dark);
+    border-top: 5px solid var(--line-dark);
+    border-bottom: 5px solid var(--line-dark);
+    border-radius: 30px 0 0 30px;
+    /* Curva suave */
+    z-index: 0;
+    opacity: 0.8;
+}
+
+.loop-line::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--line-dark);
+}
+
+/* --- SETA DIAGONAL (SVG) --- */
+.connector-area {
+    position: relative;
+    pointer-events: none;
+}
+
+svg {
+    overflow: visible;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .flow-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+
+    .connector-area {
+        display: none;
+    }
+
+    .right-col::before {
+        content: '⬇ SE ESTIVER CORRETO ⬇';
+        font-weight: bold;
+        color: var(--line-dark);
+        margin-bottom: 20px;
+    }
+}
+
+@media print {
+    .top-nav {
+        display: none;
+    }
+
+    .diagram-area {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        border: none;
+        background: white;
+    }
+
+    body {
+        background: white;
+    }
+}

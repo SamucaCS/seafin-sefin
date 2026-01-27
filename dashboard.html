@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEAFIN - Painel de Transparência</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <header class="sefin-header">
+        <div class="logo-area">
+            <h1>SEAFIN <span style="font-weight: 300; font-size: 0.8em; color: #7f8c8d;">| Transparência</span></h1>
+            <span>Painel de Monitoramento de Prestações de Contas</span>
+        </div>
+        <button class="btn-refresh" onclick="carregarDados()">
+            <i class="fa-solid fa-arrows-rotate"></i> Atualizar
+        </button>
+    </header>
+
+    <main class="container dashboard-container">
+
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h3><i class="fa-solid fa-building-columns"></i> PDDE FEDERAL</h3>
+                <div class="total-tag">Total: <span id="total-fed">0</span></div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-card border-green">
+                    <span>Não Iniciada</span>
+                    <h4 id="num-fed-ni">0</h4>
+                </div>
+                <div class="metric-card border-red">
+                    <span>Em Revisão</span>
+                    <h4 id="num-fed-rev">0</h4>
+                </div>
+                <div class="metric-card border-yellow">
+                    <span>Em Análise</span>
+                    <h4 id="num-fed-ana">0</h4>
+                </div>
+                <div class="metric-card border-aqua">
+                    <span>Aguard. SEDUC</span>
+                    <h4 id="num-fed-sed">0</h4>
+                </div>
+                <div class="metric-card border-blue">
+                    <span>Aprovada</span>
+                    <h4 id="num-fed-apr">0</h4>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-box">
+                    <h5>Desempenho Geral (Barras)</h5>
+                    <div class="canvas-container">
+                        <canvas id="chartBarFed"></canvas>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <h5>Percentual de Rendimento (Pizza)</h5>
+                    <div class="canvas-container">
+                        <canvas id="chartPieFed"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h3><i class="fa-solid fa-map-location-dot"></i> PDDE PAULISTA</h3>
+                <div class="total-tag">Total: <span id="total-pau">0</span></div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-card border-green">
+                    <span>Não Iniciada</span>
+                    <h4 id="num-pau-ni">0</h4>
+                </div>
+                <div class="metric-card border-red">
+                    <span>Em Revisão</span>
+                    <h4 id="num-pau-rev">0</h4>
+                </div>
+                <div class="metric-card border-yellow">
+                    <span>Em Análise</span>
+                    <h4 id="num-pau-ana">0</h4>
+                </div>
+                <div class="metric-card border-aqua">
+                    <span>Aguard. SEDUC</span>
+                    <h4 id="num-pau-sed">0</h4>
+                </div>
+                <div class="metric-card border-blue">
+                    <span>Aprovada</span>
+                    <h4 id="num-pau-apr">0</h4>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-box">
+                    <h5>Desempenho Geral (Barras)</h5>
+                    <div class="canvas-container">
+                        <canvas id="chartBarPau"></canvas>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <h5>Percentual de Rendimento (Pizza)</h5>
+                    <div class="canvas-container">
+                        <canvas id="chartPiePau"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer-simple">
+        <p>Dados atualizados pelo Departamento de Gestão Financeira - SEAFIN</p>
+    </footer>
+
+    <script src="dashboard-script.js"></script>
+</body>
+
+</html>
