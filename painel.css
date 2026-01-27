@@ -114,9 +114,6 @@ select {
     font-style: italic;
 }
 
-
-/* Botão de Excluir */
-
 .btn-delete {
     background-color: #ffebee;
     border: 1px solid #ffcdd2;
@@ -134,9 +131,6 @@ select {
     border-color: #ef9a9a;
 }
 
-
-/* Melhoria no Select de Status */
-
 .select-status {
     padding: 6px 10px;
     border-radius: 20px;
@@ -145,9 +139,6 @@ select {
     cursor: pointer;
     outline: none;
 }
-
-
-/* Cores dinâmicas para o Select */
 
 .select-status.status-pendente {
     background-color: #fff3cd;
