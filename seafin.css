@@ -1,14 +1,10 @@
-/* seafin_admin.css */
-
 :root {
     --primary-bg: #f4f7f6;
     --card-bg: #ffffff;
     --primary-text: #2c3e50;
     --secondary-text: #7f8c8d;
     --accent-color: #2980b9;
-    /* Azul Sefin */
     --success-color: #27ae60;
-    /* Verde Salvar */
     --danger-color: #e74c3c;
     --border-radius: 12px;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -56,7 +52,6 @@ h1 i {
     margin-right: 10px;
 }
 
-/* --- ABAS DE NAVEGAÇÃO --- */
 .tabs {
     display: flex;
     justify-content: center;
@@ -93,7 +88,6 @@ h1 i {
     box-shadow: 0 4px 15px rgba(41, 128, 185, 0.3);
 }
 
-/* --- FORMULÁRIO --- */
 .form-section {
     background: #fff;
     padding: 10px;
@@ -144,7 +138,6 @@ select:focus {
     background: white;
 }
 
-/* Botão de Adicionar */
 .btn-add {
     background: linear-gradient(135deg, #2ecc71, #27ae60);
     color: white;
@@ -177,7 +170,6 @@ select:focus {
     cursor: not-allowed;
 }
 
-/* --- ÁREA DE RESUMO E TABELA --- */
 .resumo-area {
     margin-top: 50px;
     border-top: 1px dashed #ddd;
@@ -225,7 +217,6 @@ tr:hover td {
     background-color: #fcfcfc;
 }
 
-/* Botão Excluir na Tabela */
 .btn-remove {
     color: var(--danger-color);
     background: rgba(231, 76, 60, 0.1);
@@ -242,7 +233,6 @@ tr:hover td {
     background: rgba(231, 76, 60, 0.2);
 }
 
-/* --- CARD DE TOTAL --- */
 .total-box {
     background: linear-gradient(135deg, #34495e, #2c3e50);
     color: white;
@@ -270,7 +260,6 @@ tr:hover td {
     line-height: 1;
 }
 
-/* Animação suave */
 @keyframes fadeIn {
     from {
         opacity: 0;
