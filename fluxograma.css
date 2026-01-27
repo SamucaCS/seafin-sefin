@@ -1,28 +1,14 @@
 :root {
-    /* Paleta Pastel Verde */
     --page-bg: #f0fdf4;
-    /* Fundo Verde Menta muito suave */
     --line-color: #4ade80;
-    /* Verde Vibrante Suave para linhas */
     --line-dark: #15803d;
-    /* Verde Floresta para setas e textos */
-
     --box-bg: #ffffff;
-    /* Branco Puro */
     --box-border: 2px solid #86efac;
-    /* Borda Verde Pastel */
-
     --decision-bg: #dcfce7;
-    /* Fundo das Perguntas (Verde bem clarinho) */
     --start-bg: #16a34a;
-    /* Fundo do Início (Verde Sólido) */
     --start-text: #ffffff;
-
     --text-color: #374151;
-    /* Cinza Escuro Suave para leitura */
     --shadow-soft: 0 4px 20px rgba(22, 163, 74, 0.15);
-    /* Sombra verde difusa */
-
     --font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
@@ -37,13 +23,11 @@ body {
     color: var(--text-color);
 }
 
-/* --- NAV BAR (Mantendo profissional, mas verde) --- */
 .top-nav {
     position: fixed;
     top: 0;
     width: 100%;
     background: white;
-    /* Barra branca para ficar clean */
     color: var(--line-dark);
     padding: 10px 20px;
     display: flex;
@@ -86,11 +70,9 @@ body {
     color: white;
 }
 
-/* --- ÁREA DO DIAGRAMA --- */
 .diagram-area {
     margin-top: 100px;
     background: rgba(255, 255, 255, 0.6);
-    /* Vidro sutil */
     backdrop-filter: blur(10px);
     padding: 50px;
     border-radius: 20px;
@@ -102,16 +84,11 @@ body {
     align-items: center;
     border: 1px solid #e0f2f1;
 }
-
-/* --- ESTILOS DAS CAIXAS --- */
-
-/* Início (Oval) */
 .start-oval {
     background: var(--start-bg);
     color: var(--start-text);
     border: none;
     border-radius: 50px;
-    /* Bem arredondado */
     padding: 20px 50px;
     text-align: center;
     font-weight: 700;
@@ -137,8 +114,6 @@ body {
     align-items: center;
     position: relative;
 }
-
-/* Caixas de Decisão (Perguntas) */
 .decision-box {
     background: var(--decision-bg);
     border: 2px solid var(--line-color);
@@ -152,13 +127,10 @@ body {
     z-index: 2;
 }
 
-/* Caixas de Processo (Ações) */
 .process-box {
     background: var(--box-bg);
     border: 2px solid #cbd5e1;
-    /* Cinza claro suave */
     border-left: 5px solid var(--line-color);
-    /* Detalhe verde na lateral */
     padding: 18px;
     margin: 15px 0;
     width: 80%;
@@ -184,12 +156,10 @@ body {
     font-weight: 800;
 }
 
-/* --- SETAS CSS (Verdes) --- */
 .arrow-down {
     width: 0;
     height: 30px;
     border-left: 3px solid var(--line-dark);
-    /* Linha mais fina e escura */
     position: relative;
     margin: -2px 0;
     z-index: 1;
@@ -206,7 +176,6 @@ body {
     border-top: 8px solid var(--line-dark);
 }
 
-/* --- LOOP DE CORREÇÃO (Seta curva esquerda) --- */
 .process-wrapper {
     position: relative;
     display: flex;
@@ -221,12 +190,10 @@ body {
     bottom: 130px;
     left: -25px;
     width: 50%;
-    /* Borda Verde Pastel Escuro */
     border-left: 5px solid var(--line-dark);
     border-top: 5px solid var(--line-dark);
     border-bottom: 5px solid var(--line-dark);
     border-radius: 30px 0 0 30px;
-    /* Curva suave */
     z-index: 0;
     opacity: 0.8;
 }
@@ -241,7 +208,6 @@ body {
     border-left: 12px solid var(--line-dark);
 }
 
-/* --- SETA DIAGONAL (SVG) --- */
 .connector-area {
     position: relative;
     pointer-events: none;
@@ -251,7 +217,6 @@ svg {
     overflow: visible;
 }
 
-/* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
     .flow-grid {
         grid-template-columns: 1fr;
