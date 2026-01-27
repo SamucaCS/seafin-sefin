@@ -1,15 +1,11 @@
 const SUPABASE_URL = "https://gheomtxpsigcrbdfnybo.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZW9tdHhwc2lnY3JiZGZueWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjc0NDcsImV4cCI6MjA4NDg0MzQ0N30.JU2AezTf0fbzA1SX5fC3Stokm4B1cYuliwtYE224iw8";
-
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 1. CARREGAR CHAMADOS
 async function carregarChamados() {
   const tbody = document.getElementById("lista-corpo");
   const loading = document.getElementById("loading");
-
   tbody.innerHTML = "";
   loading.style.display = "block";
 
@@ -38,7 +34,6 @@ async function carregarChamados() {
   }
 }
 
-// 2. RENDERIZAR LINHA (HTML)
 function renderizarLinha(chamado, tbody) {
   const dataFormatada = chamado.created_at
     ? new Date(chamado.created_at).toLocaleDateString("pt-BR")
@@ -109,7 +104,6 @@ async function atualizarStatus(id, novoStatus) {
   }
 }
 
-// 4. FUNÇÃO EXCLUIR CHAMADO (Remoção)
 async function excluirChamado(id) {
   const confirmacao = confirm(
     "Tem certeza que deseja excluir este chamado permanentemente?",
