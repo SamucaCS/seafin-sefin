@@ -65,10 +65,25 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
     duvidas: "Dúvidas / Orientações",
   };
 
-
   if (titulo) titulo.innerText = titulos[tipoKey] || "Solicitação de Serviço";
-  areaDinamica.innerHTML = "";
+  const labelObs = Array.from(document.querySelectorAll("label")).find((el) =>
+    el.innerText.includes("Observações"),
+  );
 
+  if (labelObs) {
+    if (tipoKey === "federal") {
+      labelObs.innerText =
+        "Observações (Inserir o programa e Exercício EX: Educação Básica 2025)";
+    } else if (tipoKey === "paulista") {
+      labelObs.innerText =
+        "Observações (Inserir a categoria EX: Custeio de exercício de 2025)";
+    } else {
+
+      labelObs.innerText = "Observações (Explique a situação)";
+    }
+  }
+
+  areaDinamica.innerHTML = "";
   let selectHtml = "";
   if (opcoesMenu[tipoKey]) {
     const options = opcoesMenu[tipoKey]
@@ -120,6 +135,7 @@ async function verificarDisponibilidade() {
       .not("horario_agendamento", "is", null);
 
     if (error) throw error;
+
     const horariosOcupados = (data || [])
       .map((h) => h.horario_agendamento)
       .filter((h) => h && h.trim().length > 0);
@@ -172,7 +188,6 @@ async function enviarFormulario(e) {
   e.preventDefault();
   const submitBtn = document.querySelector(".btn-submit");
   const textoOriginal = submitBtn.innerText;
-
   submitBtn.innerText = "Processando...";
   submitBtn.disabled = true;
 
@@ -183,8 +198,6 @@ async function enviarFormulario(e) {
       const el = form.querySelector(selector);
       return el ? el.value : "";
     };
-
-  
     const nome = getVal('input[placeholder="Nome Completo"]');
     const cpf = getVal('input[placeholder="CPF"]');
     const unidade = getVal('input[placeholder="Unidade Escolar"]');
@@ -192,7 +205,6 @@ async function enviarFormulario(e) {
     const observacao = getVal("textarea");
     const detalheElement = document.getElementById("detalheServico");
     const detalheSolicitacao = detalheElement ? detalheElement.value : "";
-
     if (detalheElement && !detalheSolicitacao) {
       throw new Error("Por favor, selecione uma opção no menu de assunto.");
     }
@@ -229,6 +241,7 @@ async function enviarFormulario(e) {
     });
 
     if (error) throw error;
+
     alert(`Sucesso! Seu protocolo é: ${protocolo}`);
     fecharModal();
     form.reset();
