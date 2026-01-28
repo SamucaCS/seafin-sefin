@@ -40,10 +40,15 @@ function abrirFormulario(tipoServico) {
     if (agendaModal) {
       agendaModal.style.display = "flex";
       verificarDisponibilidade();
+    } else {
+      console.error("Erro: Modal de Agenda não encontrado no HTML.");
     }
   } else {
     configurarModalPadrao(tipoServico);
-    document.getElementById("modalOverlay").style.display = "flex";
+    const modalOverlay = document.getElementById("modalOverlay");
+    if (modalOverlay) {
+      modalOverlay.style.display = "flex";
+    }
   }
 }
 
@@ -59,6 +64,7 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
     fatura: "Fatura / Informação",
     duvidas: "Dúvidas / Orientações",
   };
+
 
   if (titulo) titulo.innerText = titulos[tipoKey] || "Solicitação de Serviço";
   areaDinamica.innerHTML = "";
@@ -81,7 +87,8 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
 
   if (horarioSelecionado) {
     areaDinamica.innerHTML = `
-            ${selectHtml} <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #27ae60; color: #1e8449;">
+            ${selectHtml}
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #27ae60; color: #1e8449;">
                 <strong><i class="fa-regular fa-clock"></i> Agendamento Confirmado:</strong><br>
                 ${horarioSelecionado}
             </div>
@@ -90,7 +97,8 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   } else {
     if (inputHorario) inputHorario.value = "";
     areaDinamica.innerHTML = `
-            ${selectHtml} <div class="input-group">
+            ${selectHtml}
+            <div class="input-group">
                 <label>Documento Principal (Obrigatório)</label>
                 <input type="file" id="arquivo1" accept=".pdf,.jpg,.png,.jpeg">
             </div>
@@ -102,9 +110,53 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   }
 }
 
+async function verificarDisponibilidade() {
+  try {
+    const { data, error } = await _supabase
+      .from("chamados")
+      .select("horario_agendamento")
+      .neq("status", "Cancelado")
+      .neq("status", "Concluido")
+      .not("horario_agendamento", "is", null);
+
+    if (error) throw error;
+    const horariosOcupados = (data || [])
+      .map((h) => h.horario_agendamento)
+      .filter((h) => h && h.trim().length > 0);
+
+    const botoes = document.querySelectorAll(".time-btn");
+
+    botoes.forEach((btn) => {
+      const textoOnclick = btn.getAttribute("onclick");
+      const match = textoOnclick.match(/'([^']+)'/);
+      const horarioBotao = match ? match[1] : null;
+
+      if (horarioBotao) {
+        const estaOcupado = horariosOcupados.includes(horarioBotao);
+
+        if (estaOcupado) {
+          btn.disabled = true;
+          btn.style.backgroundColor = "#ccc";
+          btn.style.textDecoration = "line-through";
+          btn.style.cursor = "not-allowed";
+          btn.title = "Horário Indisponível";
+        } else {
+          btn.disabled = false;
+          btn.style.backgroundColor = "";
+          btn.style.textDecoration = "none";
+          btn.style.cursor = "pointer";
+          btn.title = "Disponível";
+        }
+      }
+    });
+  } catch (err) {
+    console.error("Erro ao verificar agenda:", err);
+  }
+}
+
 function confirmarAgendamento(textoHorario) {
-  fecharAgenda();
-  configurarModalPadrao("duvidas", textoHorario);
+  fecharAgenda(); 
+  configurarModalPadrao("duvidas", textoHorario); 
   document.getElementById("modalOverlay").style.display = "flex";
 }
 
@@ -120,16 +172,19 @@ async function enviarFormulario(e) {
   e.preventDefault();
   const submitBtn = document.querySelector(".btn-submit");
   const textoOriginal = submitBtn.innerText;
+
   submitBtn.innerText = "Processando...";
   submitBtn.disabled = true;
 
   try {
     const form = document.getElementById("formSuporte");
+
     const getVal = (selector) => {
       const el = form.querySelector(selector);
       return el ? el.value : "";
     };
 
+  
     const nome = getVal('input[placeholder="Nome Completo"]');
     const cpf = getVal('input[placeholder="CPF"]');
     const unidade = getVal('input[placeholder="Unidade Escolar"]');
@@ -146,7 +201,6 @@ async function enviarFormulario(e) {
     const horarioAgendado = inputHorario ? inputHorario.value : null;
     const tituloServico = document.getElementById("tituloModal").innerText;
     const protocolo = Date.now().toString().slice(-8);
-
     let urlArquivo1 = null;
     let urlArquivo2 = null;
 
@@ -162,7 +216,7 @@ async function enviarFormulario(e) {
     const { error } = await _supabase.from("chamados").insert({
       protocolo: protocolo,
       tipo_servico: tituloServico,
-      detalhe_solicitacao: detalheSolicitacao, // SALVA O NOVO CAMPO
+      detalhe_solicitacao: detalheSolicitacao,
       nome: nome,
       cpf: cpf,
       unidade_escolar: unidade,
@@ -175,7 +229,6 @@ async function enviarFormulario(e) {
     });
 
     if (error) throw error;
-
     alert(`Sucesso! Seu protocolo é: ${protocolo}`);
     fecharModal();
     form.reset();
@@ -191,43 +244,15 @@ async function enviarFormulario(e) {
 async function uploadArquivo(file, nomeBase) {
   const fileExt = file.name.split(".").pop();
   const filePath = `${nomeBase}.${fileExt}`;
+
   const { error } = await _supabase.storage
     .from("documentos")
     .upload(filePath, file);
+
   if (error) throw error;
+
   const { data } = _supabase.storage.from("documentos").getPublicUrl(filePath);
   return data.publicUrl;
-}
-
-async function verificarDisponibilidade() {
-  const { data } = await _supabase
-    .from("chamados")
-    .select("horario_agendamento")
-    .neq("status", "Cancelado")
-    .neq("status", "Concluido")
-    .not("horario_agendamento", "is", null);
-
-  if (data) {
-    const horariosOcupados = data.map((h) => h.horario_agendamento);
-    const botoes = document.querySelectorAll(".time-btn");
-    botoes.forEach((btn) => {
-      const textoOnclick = btn.getAttribute("onclick");
-      const estaOcupado = horariosOcupados.some((ocupado) =>
-        textoOnclick.includes(ocupado),
-      );
-      if (estaOcupado) {
-        btn.disabled = true;
-        btn.style.backgroundColor = "#ccc";
-        btn.style.textDecoration = "line-through";
-        btn.title = "Indisponível";
-      } else {
-        btn.disabled = false;
-        btn.style.backgroundColor = "";
-        btn.style.textDecoration = "none";
-        btn.title = "Disponível";
-      }
-    });
-  }
 }
 
 window.abrirFormulario = abrirFormulario;
