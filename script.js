@@ -1,8 +1,11 @@
 const SUPABASE_URL = "https://gheomtxpsigcrbdfnybo.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZW9tdHhwc2lnY3JiZGZueWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjc0NDcsImV4cCI6MjA4NDg0MzQ0N30.JU2AezTf0fbzA1SX5fC3Stokm4B1cYuliwtYE224iw8";
+
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// --- OPÇÕES DOS MENUS ---
 const opcoesMenu = {
   diaria: [
     "Pagamento Diária",
@@ -34,6 +37,7 @@ const opcoesMenu = {
   fatura: ["Envio de Fatura", "Informação Geral", "Outros"],
 };
 
+// --- ROTEADOR DE ABERTURA ---
 function abrirFormulario(tipoServico) {
   if (tipoServico === "duvidas") {
     const agendaModal = document.getElementById("agendaModal");
@@ -52,6 +56,7 @@ function abrirFormulario(tipoServico) {
   }
 }
 
+// --- CONFIGURAÇÃO DO MODAL (LÓGICA DOS NOVOS CAMPOS AQUI) ---
 function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   const titulo = document.getElementById("tituloModal");
   const areaDinamica = document.getElementById("areaDinamica");
@@ -65,65 +70,155 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
     duvidas: "Dúvidas / Orientações",
   };
 
+  // Define Título
   if (titulo) titulo.innerText = titulos[tipoKey] || "Solicitação de Serviço";
+
+  // Reseta label de Observações para o padrão, já que teremos campos específicos
   const labelObs = Array.from(document.querySelectorAll("label")).find((el) =>
     el.innerText.includes("Observações"),
   );
-
   if (labelObs) {
-    if (tipoKey === "federal") {
-      labelObs.innerText =
-        "Observações (Inserir o programa e Exercício EX: Educação Básica 2025)";
-    } else if (tipoKey === "paulista") {
-      labelObs.innerText =
-        "Observações (Inserir a categoria EX: Custeio de exercício de 2025)";
-    } else {
-      labelObs.innerText = "Observações (Explique a situação)";
-    }
+    labelObs.innerText = "Observações (Explique a situação) *";
   }
 
   areaDinamica.innerHTML = "";
+
+  // 1. MENU DE ASSUNTO
   let selectHtml = "";
   if (opcoesMenu[tipoKey]) {
     const options = opcoesMenu[tipoKey]
       .map((opt) => `<option value="${opt}">${opt}</option>`)
       .join("");
     selectHtml = `
-            <div class="input-group" style="margin-bottom: 15px;">
-                <label style="color:#2c3e50; font-weight:600;">Selecione o Assunto: *</label>
-                <select id="detalheServico" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
-                    <option value="" disabled selected>-- Selecione uma opção --</option>
+            <div class="input-group">
+                <label style="color:#2c3e50;">Selecione o Assunto: *</label>
+                <select id="detalheServico" required>
+                    <option value="" disabled selected>-- Selecione --</option>
                     ${options}
                 </select>
             </div>
         `;
   }
 
+  // 2. NOVOS MENUS (EXERCÍCIO E PROGRAMA) - APENAS FEDERAL E PAULISTA
+  let exercicioHtml = "";
+  let programaHtml = "";
+  let mostrarArquivoExtra = true; // Padrão é mostrar
+
+  if (tipoKey === "federal") {
+    mostrarArquivoExtra = false; // Esconde o anexo opcional
+
+    // Exercício Federal (2017-2026)
+    let anos = "";
+    for (let i = 2017; i <= 2026; i++) {
+      anos += `<option value="${i}">${i}</option>`;
+    }
+
+    exercicioHtml = `
+        <div class="input-group">
+            <label>Exercício (Ano): *</label>
+            <select id="exercicioSelect" required>
+                <option value="" disabled selected>-- Selecione o Ano --</option>
+                ${anos}
+            </select>
+        </div>
+    `;
+
+    // Programas Federal
+    const progsFed = [
+      "PDDE - Educação Básica",
+      "PDDE - Educação Integral",
+      "PDDE - Estrutura",
+      "PDDE - Mais Educação",
+      "PDDE - Qualidade",
+    ];
+    const optsProg = progsFed
+      .map((p) => `<option value="${p}">${p}</option>`)
+      .join("");
+
+    programaHtml = `
+        <div class="input-group">
+            <label>Programa: *</label>
+            <select id="programaSelect" required>
+                <option value="" disabled selected>-- Selecione o Programa --</option>
+                ${optsProg}
+            </select>
+        </div>
+    `;
+  } else if (tipoKey === "paulista") {
+    mostrarArquivoExtra = false; // Esconde o anexo opcional
+
+    // Exercício Paulista (2021-2026)
+    let anos = "";
+    for (let i = 2021; i <= 2026; i++) {
+      anos += `<option value="${i}">${i}</option>`;
+    }
+
+    exercicioHtml = `
+        <div class="input-group">
+            <label>Exercício (Ano): *</label>
+            <select id="exercicioSelect" required>
+                <option value="" disabled selected>-- Selecione o Ano --</option>
+                ${anos}
+            </select>
+        </div>
+    `;
+
+    // Programas Paulista
+    const progsPaul = ["PDDE CAPITAL", "PDDE CUSTEIO"];
+    const optsProg = progsPaul
+      .map((p) => `<option value="${p}">${p}</option>`)
+      .join("");
+
+    programaHtml = `
+        <div class="input-group">
+            <label>Programa: *</label>
+            <select id="programaSelect" required>
+                <option value="" disabled selected>-- Selecione o Programa --</option>
+                ${optsProg}
+            </select>
+        </div>
+    `;
+  }
+
+  // 3. MONTAGEM DO FORMULÁRIO
   if (horarioSelecionado) {
+    // Agenda
     areaDinamica.innerHTML = `
             ${selectHtml}
-            <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #27ae60; color: #1e8449;">
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #27ae60; color: #1e8449; margin-bottom:15px;">
                 <strong><i class="fa-regular fa-clock"></i> Agendamento Confirmado:</strong><br>
                 ${horarioSelecionado}
             </div>
         `;
     if (inputHorario) inputHorario.value = horarioSelecionado;
   } else {
+    // Formulário Padrão
     if (inputHorario) inputHorario.value = "";
+
+    // Constrói o HTML do Arquivo Extra (Só aparece se mostrarArquivoExtra for true)
+    const arquivoExtraHtml = mostrarArquivoExtra
+      ? `
+        <div class="input-group">
+            <label>Documento Extra (Opcional)</label>
+            <input type="file" id="arquivo2" accept=".pdf,.jpg,.png,.jpeg">
+        </div>`
+      : "";
+
     areaDinamica.innerHTML = `
             ${selectHtml}
+            ${exercicioHtml}
+            ${programaHtml}
             <div class="input-group">
                 <label>Documento Principal (Obrigatório) *</label>
                 <input type="file" id="arquivo1" accept=".pdf,.jpg,.png,.jpeg" required>
             </div>
-            <div class="input-group">
-                <label>Documento Extra (Opcional)</label>
-                <input type="file" id="arquivo2" accept=".pdf,.jpg,.png,.jpeg">
-            </div>
+            ${arquivoExtraHtml}
         `;
   }
 }
 
+// --- AGENDA ---
 async function verificarDisponibilidade() {
   try {
     const { data, error } = await _supabase
@@ -148,7 +243,6 @@ async function verificarDisponibilidade() {
 
       if (horarioBotao) {
         const estaOcupado = horariosOcupados.includes(horarioBotao);
-
         if (estaOcupado) {
           btn.disabled = true;
           btn.style.backgroundColor = "#ccc";
@@ -183,6 +277,7 @@ function fecharAgenda() {
   document.getElementById("agendaModal").style.display = "none";
 }
 
+// --- ENVIO ---
 async function enviarFormulario(e) {
   e.preventDefault();
   const submitBtn = document.querySelector(".btn-submit");
@@ -197,16 +292,27 @@ async function enviarFormulario(e) {
       const el = form.querySelector(selector);
       return el ? el.value : "";
     };
+
     const nome = getVal('input[placeholder="Nome Completo"]');
     const cpf = getVal('input[placeholder="CPF"]');
     const unidade = getVal('input[placeholder="Unidade Escolar"]');
     const email = getVal('input[type="email"]');
     const observacao = getVal("textarea");
+
+    // Campos Dinâmicos
     const detalheElement = document.getElementById("detalheServico");
     const detalheSolicitacao = detalheElement ? detalheElement.value : "";
+
+    const exercicioElement = document.getElementById("exercicioSelect");
+    const exercicio = exercicioElement ? exercicioElement.value : null;
+
+    const programaElement = document.getElementById("programaSelect");
+    const programa = programaElement ? programaElement.value : null;
+
     const inputHorario = document.getElementById("horarioEscolhido");
     const horarioAgendado = inputHorario ? inputHorario.value : null;
 
+    // Validações
     if (
       !nome.trim() ||
       !cpf.trim() ||
@@ -214,13 +320,19 @@ async function enviarFormulario(e) {
       !email.trim() ||
       !observacao.trim()
     ) {
-      throw new Error(
-        "Por favor, preencha todos os campos obrigatórios (Nome, CPF, Unidade, Email e Observação).",
-      );
+      throw new Error("Por favor, preencha todos os campos obrigatórios.");
     }
 
     if (detalheElement && !detalheSolicitacao) {
-      throw new Error("Por favor, selecione uma opção no menu de assunto.");
+      throw new Error("Por favor, selecione uma opção no menu de Assunto.");
+    }
+
+    if (exercicioElement && !exercicio) {
+      throw new Error("Por favor, selecione o Ano do Exercício.");
+    }
+
+    if (programaElement && !programa) {
+      throw new Error("Por favor, selecione o Programa.");
     }
 
     if (!horarioAgendado) {
@@ -237,17 +349,22 @@ async function enviarFormulario(e) {
 
     if (!horarioAgendado) {
       const f1 = document.getElementById("arquivo1");
-      const f2 = document.getElementById("arquivo2");
+      const f2 = document.getElementById("arquivo2"); // Pode ser null se não existir
+
       if (f1 && f1.files.length > 0)
         urlArquivo1 = await uploadArquivo(f1.files[0], protocolo + "_doc1");
+
       if (f2 && f2.files.length > 0)
         urlArquivo2 = await uploadArquivo(f2.files[0], protocolo + "_doc2");
     }
 
+    // Insert no Supabase (Incluindo os novos campos exercicio e programa)
     const { error } = await _supabase.from("chamados").insert({
       protocolo: protocolo,
       tipo_servico: tituloServico,
       detalhe_solicitacao: detalheSolicitacao,
+      exercicio: exercicio, // Novo Campo
+      programa: programa, // Novo Campo
       nome: nome,
       cpf: cpf,
       unidade_escolar: unidade,
