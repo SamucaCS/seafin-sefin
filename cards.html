@@ -103,7 +103,7 @@
       </div>
     </main>
 
-    <div id="modalOverlay" class="modal-overlay">
+    <div id="modalOverlay" class="modal-overlay" style="display: none">
       <div class="modal-content">
         <div class="modal-header">
           <h3 id="tituloModal">Título do Serviço</h3>
@@ -120,24 +120,23 @@
           <div class="form-section">
             <h4>Dados do Solicitante</h4>
             <div class="input-group">
-              <label>Nome Completo</label>
-              <input type="text" required />
+              <label>Nome Completo *</label>
+              <input type="text" placeholder="Nome Completo" required />
             </div>
             <div class="row">
               <div class="input-group">
-                <label>CPF</label>
-                <input type="text" required />
+                <label>CPF *</label>
+                <input type="text" placeholder="CPF" required />
               </div>
               <div class="input-group">
-                <label>Unidade Escolar</label>
-                <input type="text" required />
+                <label>Unidade Escolar *</label>
+                <input type="text" placeholder="Unidade Escolar" required />
               </div>
             </div>
             <div class="input-group">
-              <label>E-mail Institucional</label>
-              <input type="email" required />
+              <label>E-mail Institucional *</label>
+              <input type="email" placeholder="E-mail" required />
             </div>
-            <div id="campoExtraEmail"></div>
           </div>
 
           <div class="form-section bg-light">
@@ -147,7 +146,7 @@
 
           <div class="form-section">
             <div class="input-group">
-              <label>Detalhamento de situação (Explique a situação)</label>
+              <label>Observações (Explique a situação) *</label>
               <textarea rows="3" required></textarea>
             </div>
           </div>
