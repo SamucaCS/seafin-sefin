@@ -78,7 +78,6 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
       labelObs.innerText =
         "Observações (Inserir a categoria EX: Custeio de exercício de 2025)";
     } else {
-
       labelObs.innerText = "Observações (Explique a situação)";
     }
   }
@@ -91,7 +90,7 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
       .join("");
     selectHtml = `
             <div class="input-group" style="margin-bottom: 15px;">
-                <label style="color:#2c3e50; font-weight:600;">Selecione o Assunto:</label>
+                <label style="color:#2c3e50; font-weight:600;">Selecione o Assunto: *</label>
                 <select id="detalheServico" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
                     <option value="" disabled selected>-- Selecione uma opção --</option>
                     ${options}
@@ -114,8 +113,8 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
     areaDinamica.innerHTML = `
             ${selectHtml}
             <div class="input-group">
-                <label>Documento Principal (Obrigatório)</label>
-                <input type="file" id="arquivo1" accept=".pdf,.jpg,.png,.jpeg">
+                <label>Documento Principal (Obrigatório) *</label>
+                <input type="file" id="arquivo1" accept=".pdf,.jpg,.png,.jpeg" required>
             </div>
             <div class="input-group">
                 <label>Documento Extra (Opcional)</label>
@@ -171,8 +170,8 @@ async function verificarDisponibilidade() {
 }
 
 function confirmarAgendamento(textoHorario) {
-  fecharAgenda(); 
-  configurarModalPadrao("duvidas", textoHorario); 
+  fecharAgenda();
+  configurarModalPadrao("duvidas", textoHorario);
   document.getElementById("modalOverlay").style.display = "flex";
 }
 
@@ -205,12 +204,32 @@ async function enviarFormulario(e) {
     const observacao = getVal("textarea");
     const detalheElement = document.getElementById("detalheServico");
     const detalheSolicitacao = detalheElement ? detalheElement.value : "";
+    const inputHorario = document.getElementById("horarioEscolhido");
+    const horarioAgendado = inputHorario ? inputHorario.value : null;
+
+    if (
+      !nome.trim() ||
+      !cpf.trim() ||
+      !unidade.trim() ||
+      !email.trim() ||
+      !observacao.trim()
+    ) {
+      throw new Error(
+        "Por favor, preencha todos os campos obrigatórios (Nome, CPF, Unidade, Email e Observação).",
+      );
+    }
+
     if (detalheElement && !detalheSolicitacao) {
       throw new Error("Por favor, selecione uma opção no menu de assunto.");
     }
 
-    const inputHorario = document.getElementById("horarioEscolhido");
-    const horarioAgendado = inputHorario ? inputHorario.value : null;
+    if (!horarioAgendado) {
+      const f1 = document.getElementById("arquivo1");
+      if (!f1 || f1.files.length === 0) {
+        throw new Error("O Documento Principal é obrigatório.");
+      }
+    }
+
     const tituloServico = document.getElementById("tituloModal").innerText;
     const protocolo = Date.now().toString().slice(-8);
     let urlArquivo1 = null;
