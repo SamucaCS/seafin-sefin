@@ -147,7 +147,7 @@
 
           <div class="form-section">
             <div class="input-group">
-              <label>Observações (Explique a situação)</label>
+              <label>Detalhamento de situação (Explique a situação)</label>
               <textarea rows="3" required></textarea>
             </div>
           </div>
@@ -162,88 +162,221 @@
       </div>
     </div>
 
-    <div id="agendaModal" class="modal-overlay" style="z-index: 2000">
+    <div id="agendaModal" class="modal-overlay" style="display: none">
       <div class="modal-content agenda-content">
-        <div class="modal-header">
-          <h3>Agendamento - Fevereiro 2026</h3>
-          <button class="close-btn" onclick="fecharAgenda()">&times;</button>
+        <span class="close-btn" onclick="fecharAgenda()">&times;</span>
+
+        <div class="modal-header-agenda">
+          <h2>
+            <i class="fa-regular fa-calendar-check"></i> Agendamento - Fevereiro
+            2026
+          </h2>
+          <p>Selecione um horário disponível para atendimento:</p>
         </div>
 
-        <div class="agenda-body">
-          <p class="agenda-subtitle">
-            Selecione um horário disponível para atendimento:
-          </p>
+        <div class="agenda-scroll-area">
+          <div class="agenda-columns">
+            <div class="day-column">
+              <h3>Segunda-Feira</h3>
+              <i class="fa-regular fa-calendar day-icon"></i>
 
-          <div class="agenda-grid">
-            <div class="agenda-column">
-              <div class="day-header">
-                <span class="day-name">Segunda</span>
-                <span class="day-icon"
-                  ><i class="fa-regular fa-calendar"></i
-                ></span>
-              </div>
-              <div class="time-slots">
+              <div class="date-group">
+                <span class="date-label">Dia 02/02</span>
                 <button
-                  type="button"
                   class="time-btn"
-                  onclick="confirmarAgendamento('Segunda - 08:30 às 10:30')"
+                  onclick="confirmarAgendamento('02/02 - 08:30')"
                 >
                   08:30 - 10:30
                 </button>
                 <button
-                  type="button"
                   class="time-btn"
-                  onclick="confirmarAgendamento('Segunda - 11:00 às 13:00')"
+                  onclick="confirmarAgendamento('02/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 09/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('09/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('09/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 16/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('16/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('16/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 23/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('23/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('23/02 - 11:00')"
                 >
                   11:00 - 13:00
                 </button>
               </div>
             </div>
 
-            <div class="agenda-column">
-              <div class="day-header">
-                <span class="day-name">Quarta</span>
-                <span class="day-icon"
-                  ><i class="fa-regular fa-calendar"></i
-                ></span>
-              </div>
-              <div class="time-slots">
+            <div class="day-column">
+              <h3>Quarta-Feira</h3>
+              <i class="fa-regular fa-calendar day-icon"></i>
+
+              <div class="date-group">
+                <span class="date-label">Dia 04/02</span>
                 <button
-                  type="button"
                   class="time-btn"
-                  onclick="confirmarAgendamento('Quarta - 11:00 às 13:00')"
+                  onclick="confirmarAgendamento('04/02 - 11:00')"
                 >
                   11:00 - 13:00
                 </button>
                 <button
-                  type="button"
                   class="time-btn"
-                  onclick="confirmarAgendamento('Quarta - 15:00 às 17:00')"
+                  onclick="confirmarAgendamento('04/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 11/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('11/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('11/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 18/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('18/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('18/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 25/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('25/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('25/02 - 15:00')"
                 >
                   15:00 - 17:00
                 </button>
               </div>
             </div>
 
-            <div class="agenda-column">
-              <div class="day-header">
-                <span class="day-name">Sexta</span>
-                <span class="day-icon"
-                  ><i class="fa-regular fa-calendar"></i
-                ></span>
-              </div>
-              <div class="time-slots">
+            <div class="day-column">
+              <h3>Sexta-Feira</h3>
+              <i class="fa-regular fa-calendar day-icon"></i>
+
+              <div class="date-group">
+                <span class="date-label">Dia 06/02</span>
                 <button
-                  type="button"
                   class="time-btn"
-                  onclick="confirmarAgendamento('Sexta - 08:30 às 10:30')"
+                  onclick="confirmarAgendamento('06/02 - 08:30')"
                 >
                   08:30 - 10:30
                 </button>
                 <button
-                  type="button"
                   class="time-btn"
-                  onclick="confirmarAgendamento('Sexta - 11:00 às 13:00')"
+                  onclick="confirmarAgendamento('06/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 13/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('13/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('13/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 20/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('20/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('20/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 27/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('27/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('27/02 - 11:00')"
                 >
                   11:00 - 13:00
                 </button>
