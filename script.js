@@ -83,6 +83,7 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
     const options = opcoesMenu[tipoKey]
       .map((opt) => `<option value="${opt}">${opt}</option>`)
       .join("");
+
     selectHtml = `
             <div class="input-group">
                 <label style="color:#2c3e50;">Selecione o Assunto: *</label>
@@ -92,6 +93,19 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
                 </select>
             </div>
         `;
+
+    if (tipoKey === "duvidas") {
+      selectHtml += `
+            <div class="input-group">
+                <label style="color:#2c3e50;">Tipo de Reunião: *</label>
+                <select id="tipoReuniao" required>
+                    <option value="" disabled selected>-- Selecione --</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Via Teams">Via Teams</option>
+                </select>
+            </div>
+        `;
+    }
   }
 
   let exercicioHtml = "";
@@ -190,7 +204,6 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
       labelDoc1 = "Convocação e Holerite (Obrigatório) *";
       labelDoc2 =
         "Requisição de Transporte (É obrigatório anexar o arquivo para solicitação) *";
-      reqDoc2 = "required";
     }
 
     const arquivoExtraHtml = mostrarArquivoExtra
@@ -294,13 +307,17 @@ async function enviarFormulario(e) {
     const observacao = getVal("textarea");
 
     const detalheElement = document.getElementById("detalheServico");
-    const detalheSolicitacao = detalheElement ? detalheElement.value : "";
+    let detalheSolicitacao = detalheElement ? detalheElement.value : "";
+
+    const tipoReuniaoElement = document.getElementById("tipoReuniao");
+    const tipoReuniao = tipoReuniaoElement ? tipoReuniaoElement.value : null;
     const exercicioElement = document.getElementById("exercicioSelect");
     const exercicio = exercicioElement ? exercicioElement.value : null;
     const programaElement = document.getElementById("programaSelect");
     const programa = programaElement ? programaElement.value : null;
     const inputHorario = document.getElementById("horarioEscolhido");
     const horarioAgendado = inputHorario ? inputHorario.value : null;
+
     const tituloServico = document.getElementById("tituloModal").innerText;
 
     if (
@@ -315,6 +332,16 @@ async function enviarFormulario(e) {
 
     if (detalheElement && !detalheSolicitacao) {
       throw new Error("Por favor, selecione uma opção no menu de Assunto.");
+    }
+
+    if (tipoReuniaoElement && !tipoReuniao) {
+      throw new Error(
+        "Por favor, selecione o Tipo de Reunião (Presencial ou Teams).",
+      );
+    }
+
+    if (tipoReuniao) {
+      detalheSolicitacao += ` (${tipoReuniao})`;
     }
 
     if (exercicioElement && !exercicio) {
@@ -332,15 +359,6 @@ async function enviarFormulario(e) {
           throw new Error("A Convocação e Holerite são obrigatórios.");
         } else {
           throw new Error("O Documento Principal é obrigatório.");
-        }
-      }
-
-      if (tituloServico.includes("Diária")) {
-        const f2 = document.getElementById("arquivo2");
-        if (!f2 || f2.files.length === 0) {
-          throw new Error(
-            "A Requisição de Transporte é obrigatória para este serviço.",
-          );
         }
       }
     }
