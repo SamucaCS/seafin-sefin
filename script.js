@@ -4,6 +4,7 @@ const SUPABASE_KEY =
 
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const opcoesMenu = {
   diaria: [
     "Pagamento Diária",
@@ -95,10 +96,11 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
 
   let exercicioHtml = "";
   let programaHtml = "";
-  let mostrarArquivoExtra = true; 
+  let mostrarArquivoExtra = true;
 
   if (tipoKey === "federal") {
     mostrarArquivoExtra = false;
+
     let anos = "";
     for (let i = 2017; i <= 2026; i++) {
       anos += `<option value="${i}">${i}</option>`;
@@ -135,7 +137,8 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
         </div>
     `;
   } else if (tipoKey === "paulista") {
-    mostrarArquivoExtra = false; 
+    mostrarArquivoExtra = false;
+
     let anos = "";
     for (let i = 2021; i <= 2026; i++) {
       anos += `<option value="${i}">${i}</option>`;
@@ -168,7 +171,6 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   }
 
   if (horarioSelecionado) {
-   
     areaDinamica.innerHTML = `
             ${selectHtml}
             <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #27ae60; color: #1e8449; margin-bottom:15px;">
@@ -180,11 +182,22 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
   } else {
     if (inputHorario) inputHorario.value = "";
 
+    let labelDoc1 = "Documento Principal (Obrigatório) *";
+    let labelDoc2 = "Documento Extra (Opcional)";
+    let reqDoc2 = "";
+
+    if (tipoKey === "diaria") {
+      labelDoc1 = "Convocação e Holerite (Obrigatório) *";
+      labelDoc2 =
+        "Requisição de Transporte (É obrigatório anexar o arquivo para solicitação) *";
+      reqDoc2 = "required";
+    }
+
     const arquivoExtraHtml = mostrarArquivoExtra
       ? `
         <div class="input-group">
-            <label>Documento Extra (Opcional)</label>
-            <input type="file" id="arquivo2" accept=".pdf,.jpg,.png,.jpeg">
+            <label>${labelDoc2}</label>
+            <input type="file" id="arquivo2" accept=".pdf,.jpg,.png,.jpeg" ${reqDoc2}>
         </div>`
       : "";
 
@@ -193,7 +206,7 @@ function configurarModalPadrao(tipoKey, horarioSelecionado = null) {
             ${exercicioHtml}
             ${programaHtml}
             <div class="input-group">
-                <label>Documento Principal (Obrigatório) *</label>
+                <label>${labelDoc1}</label>
                 <input type="file" id="arquivo1" accept=".pdf,.jpg,.png,.jpeg" required>
             </div>
             ${arquivoExtraHtml}
@@ -279,15 +292,20 @@ async function enviarFormulario(e) {
     const unidade = getVal('input[placeholder="Unidade Escolar"]');
     const email = getVal('input[type="email"]');
     const observacao = getVal("textarea");
-    
+
     const detalheElement = document.getElementById("detalheServico");
     const detalheSolicitacao = detalheElement ? detalheElement.value : "";
+
     const exercicioElement = document.getElementById("exercicioSelect");
     const exercicio = exercicioElement ? exercicioElement.value : null;
+
     const programaElement = document.getElementById("programaSelect");
     const programa = programaElement ? programaElement.value : null;
+
     const inputHorario = document.getElementById("horarioEscolhido");
     const horarioAgendado = inputHorario ? inputHorario.value : null;
+
+    const tituloServico = document.getElementById("tituloModal").innerText;
 
     if (
       !nome.trim() ||
@@ -314,18 +332,30 @@ async function enviarFormulario(e) {
     if (!horarioAgendado) {
       const f1 = document.getElementById("arquivo1");
       if (!f1 || f1.files.length === 0) {
-        throw new Error("O Documento Principal é obrigatório.");
+        if (tituloServico.includes("Diária")) {
+          throw new Error("A Convocação e Holerite são obrigatórios.");
+        } else {
+          throw new Error("O Documento Principal é obrigatório.");
+        }
+      }
+
+      if (tituloServico.includes("Diária")) {
+        const f2 = document.getElementById("arquivo2");
+        if (!f2 || f2.files.length === 0) {
+          throw new Error(
+            "A Requisição de Transporte é obrigatória para este serviço.",
+          );
+        }
       }
     }
 
-    const tituloServico = document.getElementById("tituloModal").innerText;
     const protocolo = Date.now().toString().slice(-8);
     let urlArquivo1 = null;
     let urlArquivo2 = null;
 
     if (!horarioAgendado) {
       const f1 = document.getElementById("arquivo1");
-      const f2 = document.getElementById("arquivo2"); 
+      const f2 = document.getElementById("arquivo2");
 
       if (f1 && f1.files.length > 0)
         urlArquivo1 = await uploadArquivo(f1.files[0], protocolo + "_doc1");
@@ -333,12 +363,13 @@ async function enviarFormulario(e) {
       if (f2 && f2.files.length > 0)
         urlArquivo2 = await uploadArquivo(f2.files[0], protocolo + "_doc2");
     }
+
     const { error } = await _supabase.from("chamados").insert({
       protocolo: protocolo,
       tipo_servico: tituloServico,
       detalhe_solicitacao: detalheSolicitacao,
-      exercicio: exercicio, 
-      programa: programa, 
+      exercicio: exercicio,
+      programa: programa,
       nome: nome,
       cpf: cpf,
       unidade_escolar: unidade,
@@ -383,4 +414,3 @@ window.fecharModal = fecharModal;
 window.fecharAgenda = fecharAgenda;
 window.confirmarAgendamento = confirmarAgendamento;
 window.enviarFormulario = enviarFormulario;
-
