@@ -295,16 +295,12 @@ async function enviarFormulario(e) {
 
     const detalheElement = document.getElementById("detalheServico");
     const detalheSolicitacao = detalheElement ? detalheElement.value : "";
-
     const exercicioElement = document.getElementById("exercicioSelect");
     const exercicio = exercicioElement ? exercicioElement.value : null;
-
     const programaElement = document.getElementById("programaSelect");
     const programa = programaElement ? programaElement.value : null;
-
     const inputHorario = document.getElementById("horarioEscolhido");
     const horarioAgendado = inputHorario ? inputHorario.value : null;
-
     const tituloServico = document.getElementById("tituloModal").innerText;
 
     if (
