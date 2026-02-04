@@ -24,7 +24,7 @@ async function carregarChamados() {
 
     if (data.length === 0) {
       tbody.innerHTML =
-        '<tr><td colspan="9" style="text-align:center; padding: 20px;">Nenhum chamado encontrado.</td></tr>';
+        '<tr><td colspan="10" style="text-align:center; padding: 20px;">Nenhum chamado encontrado.</td></tr>';
       return;
     }
 
@@ -92,6 +92,10 @@ function renderizarLinha(chamado, tbody) {
     : '<span style="color:#999; font-style:italic;">Sem Nome</span>';
   const cpfExibir = chamado.cpf ? chamado.cpf : "";
 
+  const escolaExibir = chamado.unidade_escolar
+    ? `<div style="font-size:13px; color:#444;"><i class="fa-solid fa-school" style="color:#27ae60; margin-right:5px;"></i> ${chamado.unidade_escolar}</div>`
+    : '<span style="color:#ccc; font-size:12px;">-</span>';
+
   const row = `
         <tr>
             <td><strong>#${chamado.protocolo || "..."}</strong></td>
@@ -100,7 +104,7 @@ function renderizarLinha(chamado, tbody) {
                 <div style="font-weight:bold; color:#2c3e50;">${nomeExibir}</div>
                 <small style="color:#777">${cpfExibir}</small>
             </td>
-            <td>${emailHtml}</td>
+            <td>${escolaExibir}</td> <td>${emailHtml}</td>
             <td>${servicoHtml}</td>
             <td>${docsHtml}</td>
             <td>
