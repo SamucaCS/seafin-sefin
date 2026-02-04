@@ -1,9 +1,73 @@
 const SUPABASE_URL = "https://gheomtxpsigcrbdfnybo.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZW9tdHhwc2lnY3JiZGZueWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjc0NDcsImV4cCI6MjA4NDg0MzQ0N30.JU2AezTf0fbzA1SX5fC3Stokm4B1cYuliwtYE224iw8";
-
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const listaEscolas = [
+  "ALFREDO ROBERTO",
+  "ALICE ROMANOS PROFª",
+  "ANDERSON DA SILVA SOARES",
+  "ANGELA SUELI P DIAS",
+  "ANIS FADUL DOUTOR",
+  "ANTONIO BRASILIO MENEZES DA FONSECA PROF",
+  "ANTONIO GARCIA VEREADOR",
+  "ANTONIO JOSE CAMPOS DE MENEZES PROF",
+  "ANTONIO RODRIGUES DE ALMEIDA",
+  "ANTONIO VALDEMAR GALO VEREADOR",
+  "BATISTA RENZI",
+  "BENEDITA DE CAMPOS MARCOLONGO PROFª",
+  "BRASILIO MACHADO NETO COMENDADOR",
+  "CARLINDO REIS",
+  "CARLOS MOLTENI PROF",
+  "CHOJIRO SEGAWA",
+  "DAVID JORGE CURI PROF",
+  "EDIR DO COUTO ROSA",
+  "ELIANE APARECIDA D DA SILVA",
+  "EUCLIDES IGESCA",
+  "GERALDO JUSTINIANO DE REZENDE SILVA PROF",
+  "GILBERTO DE CARVALHO PROF",
+  "GIOVANNI BATTISTA RAFFO PROF DOUTOR",
+  "HELENA ZERRENNER",
+  "IIJIMA",
+  "IGNES CORREA ALLEN",
+  "JACQUES YVES COUSTEAU COMANDANTE",
+  "JANDYRA COUTINHO PROFª",
+  "JARDIM SAO PAULO II",
+  "Jose Eduardo Viera Raduan",
+  "JOSE BENEDITO LEITE BARTHOLOMEI PROF",
+  "JOSE CAMILO DE ANDRADE",
+  "JOSE PAPAIZ PROF",
+  "JOVIANO SATLER DE LIMA PROF",
+  "JUSSARA FEITOSA DOMSCHKE PROFª",
+  "Justino Marcondes Rangel",
+  "Landia dos Santos Batista",
+  "LEDA FERNANDES LOPES PROFª",
+  "LUCY FRANCO KOWALSKI PROFª",
+  "LUIZ BIANCONI",
+  "LUIZA HIDAKA PROFª",
+  "MANUEL DOS SANTOS PAIVA",
+  "MARIA ELISA DE AZEVEDO CINTRA PROFª",
+  "Mario Manoel Dantas de Aquino",
+  "MARTHA CALIXTO CAZAGRANDE",
+  "MASAITI SEKINE PROF",
+  "MORATO DE OLIVEIRA DOUTOR",
+  "OLAVO LEONEL FERREIRA PROF",
+  "OLZANETTI GOMES PROFESSOR",
+  "OSWALDO DE OLIVEIRA LIMA",
+  "PARQUE DOURADO II",
+  "PAULO AMERICO PAGANUCCI",
+  "PAULO KOBAYASHI PROF",
+  "RAUL BRASIL PROF EE",
+  "RAUL BRASIL PROF",
+  "ROBERTO BIANCHI",
+  "SEBASTIAO PEREIRA VIDAL",
+  "Tacito Zancheta",
+  "TOCHICHICO YOCHICAVA PROF",
+  "TOKUZO TERAZAKI",
+  "YOLANDA BASSI PROFª",
+  "ZELIA GATTAI AMADO",
+  "ZEIKICHI FUKUOKA",
+];
 
 const opcoesMenu = {
   diaria: [
@@ -35,6 +99,18 @@ const opcoesMenu = {
   ],
   fatura: ["Envio de Fatura", "Informação Geral", "Outros"],
 };
+
+function carregarEscolas() {
+  const select = document.getElementById("unidadeEscolar");
+  if (!select) return; 
+
+  listaEscolas.forEach((escola) => {
+    const option = document.createElement("option");
+    option.value = escola;
+    option.textContent = escola;
+    select.appendChild(option);
+  });
+}
 
 function abrirFormulario(tipoServico) {
   if (tipoServico === "duvidas") {
@@ -302,13 +378,12 @@ async function enviarFormulario(e) {
 
     const nome = getVal('input[placeholder="Nome Completo"]');
     const cpf = getVal('input[placeholder="CPF"]');
-    const unidade = getVal('input[placeholder="Unidade Escolar"]');
     const email = getVal('input[type="email"]');
     const observacao = getVal("textarea");
-
+    const unidadeElement = document.getElementById("unidadeEscolar");
+    const unidade = unidadeElement ? unidadeElement.value : "";
     const detalheElement = document.getElementById("detalheServico");
     let detalheSolicitacao = detalheElement ? detalheElement.value : "";
-
     const tipoReuniaoElement = document.getElementById("tipoReuniao");
     const tipoReuniao = tipoReuniaoElement ? tipoReuniaoElement.value : null;
     const exercicioElement = document.getElementById("exercicioSelect");
@@ -317,13 +392,12 @@ async function enviarFormulario(e) {
     const programa = programaElement ? programaElement.value : null;
     const inputHorario = document.getElementById("horarioEscolhido");
     const horarioAgendado = inputHorario ? inputHorario.value : null;
-
     const tituloServico = document.getElementById("tituloModal").innerText;
 
     if (
       !nome.trim() ||
       !cpf.trim() ||
-      !unidade.trim() ||
+      !unidade.trim() || 
       !email.trim() ||
       !observacao.trim()
     ) {
@@ -386,7 +460,7 @@ async function enviarFormulario(e) {
       programa: programa,
       nome: nome,
       cpf: cpf,
-      unidade_escolar: unidade,
+      unidade_escolar: unidade, 
       email: email,
       observacao: observacao,
       arquivo_url: urlArquivo1,
@@ -422,6 +496,7 @@ async function uploadArquivo(file, nomeBase) {
   const { data } = _supabase.storage.from("documentos").getPublicUrl(filePath);
   return data.publicUrl;
 }
+document.addEventListener("DOMContentLoaded", carregarEscolas);
 
 window.abrirFormulario = abrirFormulario;
 window.fecharModal = fecharModal;
