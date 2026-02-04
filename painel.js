@@ -53,6 +53,14 @@ function renderizarLinha(chamado, tbody) {
     servicoHtml += `<br><span style="color:#2980b9; font-size:13px; font-weight:600;">• ${chamado.detalhe_solicitacao}</span>`;
   }
 
+  if (chamado.exercicio) {
+    servicoHtml += `<br><span style="color:#8e44ad; font-size:12px; font-weight:600;">📅 Exercício: ${chamado.exercicio}</span>`;
+  }
+
+  if (chamado.programa) {
+    servicoHtml += `<br><span style="color:#16a085; font-size:12px; font-weight:600;">📂 Programa: ${chamado.programa}</span>`;
+  }
+
   if (chamado.horario_agendamento) {
     servicoHtml += `<br><small style="color:#e67e22; font-weight:bold"><i class="fa-regular fa-clock"></i> ${chamado.horario_agendamento}</small>`;
   }
