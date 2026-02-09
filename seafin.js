@@ -103,7 +103,6 @@ function mudarAba(tipo) {
   if (inputIdentificador) {
     inputIdentificador.value = "";
   }
-  // --------------------------------
 
   document
     .querySelectorAll(".tab")
