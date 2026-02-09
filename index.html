@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEFIN & SEAFIN - Portal Integrado</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header class="portal-header">
+      <div class="container-header">
+        <div
+          class="brand-logo"
+          onclick="window.location.href = 'index.html'"
+          style="cursor: pointer"
+        >
+          <i class="fa-solid fa-landmark"></i>
+          <div class="brand-text">
+            <h1>SEFIN / SEAFIN</h1>
+            <span>Portal de Finanças e Gestão</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px">
+          <a href="fluxograma.html" class="link-admin btn-fluxo">
+            <i class="fa-solid fa-van-shuttle"></i> Fluxo Transporte
+          </a>
+
+          <a href="fluxograma_contas.html" class="link-admin btn-fluxo">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Fluxo Prestação de
+            Contas
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="portal-main">
+      <div class="hero-section">
+        <h2>Bem-vindo ao Portal de Gestão</h2>
+        <p>Central de transparência, gestão de contratos e suporte técnico.</p>
+      </div>
+
+      <div class="portal-cards">
+        <a href="publico_seafin.html" class="portal-card">
+          <div class="card-content">
+            <div class="icon-big">
+              <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <h3>Transporte SEAFIN</h3>
+            <p>
+              Consulta pública de contratos de Transporte Escolar, Bilhetagem e
+              Vigências.
+            </p>
+            <span class="btn-action">
+              Consultar Dados <i class="fa-solid fa-arrow-right"></i>
+            </span>
+          </div>
+        </a>
+
+        <a href="dashboard.html" class="portal-card">
+          <div class="card-content">
+            <div class="icon-big">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <h3>Indicadores & Metas</h3>
+            <p>
+              Acompanhe o status das escolas, gráficos de aprovação e
+              indicadores gerais do PDDE.
+            </p>
+            <span class="btn-action">
+              Visualizar Painel <i class="fa-solid fa-arrow-right"></i>
+            </span>
+          </div>
+        </a>
+
+        <a href="cards.html" class="portal-card">
+          <div class="card-content">
+            <div class="icon-big">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <h3>Central de Suporte</h3>
+            <p>
+              Envio de prestação de contas, dúvidas sobre pagamentos, SIAFEM e
+              atendimento.
+            </p>
+            <span class="btn-action">
+              Abrir Chamado <i class="fa-solid fa-arrow-right"></i>
+            </span>
+          </div>
+        </a>
+      </div>
+    </main>
+
+    <footer class="portal-footer">
+      <p>&copy; 2026 SEFIN - Secretaria de Finanças.</p>
+    </footer>
+  </body>
+</html>

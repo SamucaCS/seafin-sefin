@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel de Chamados - SEFIN</title>
+
+    <link rel="stylesheet" href="painel.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <script src="painel.js" defer></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Gerenciamento de Chamados</h1>
+    </header>
+
+    <div class="container">
+      <div class="toolbar">
+        <button onclick="carregarChamados()" class="btn-refresh">
+          ↻ Atualizar Lista
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table id="tabelaChamados">
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Data</th>
+              <th>Nome / CPF</th>
+              <th>Escola</th>
+              <th>Contato</th>
+              <th>Serviço</th>
+              <th>Documentos</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="lista-corpo"></tbody>
+        </table>
+
+        <div id="loading" class="loading">Carregando chamados...</div>
+      </div>
+    </div>
+  </body>
+</html>

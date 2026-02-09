@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEAFIN - Painel Administrativo</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+
+  <body>
+    <header class="sefin-header admin-header">
+      <div class="logo-area">
+        <h1>SEAFIN <span class="badge-admin">Admin</span></h1>
+        <span>Gestão de Dados e Indicadores</span>
+      </div>
+      <button class="btn-logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </header>
+
+    <main class="container">
+      <div class="admin-intro">
+        <h2>Atualização de Indicadores</h2>
+        <p>
+          Insira os dados abaixo para atualizar os gráficos do painel público.
+        </p>
+      </div>
+
+      <form id="formIndicadores" onsubmit="salvarDados(event)">
+        <div class="cards-grid admin-grid">
+          <div class="card admin-card">
+            <div class="card-header-admin">
+              <i class="fa-solid fa-building-columns"></i>
+              <h3>PDDE FEDERAL</h3>
+            </div>
+
+            <div class="input-rows">
+              <div class="input-group">
+                <label>Escola PC Não iniciada</label>
+                <input
+                  type="number"
+                  id="fed-nao-iniciada"
+                  class="input-fed"
+                  oninput="calcularTotal('fed')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>Escola Em Revisão</label>
+                <input
+                  type="number"
+                  id="fed-revisao"
+                  class="input-fed"
+                  oninput="calcularTotal('fed')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>U.R.E Em análise</label>
+                <input
+                  type="number"
+                  id="fed-analise"
+                  class="input-fed"
+                  oninput="calcularTotal('fed')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>SEDUC Aguardando Aprovação</label>
+                <input
+                  type="number"
+                  id="fed-seduc"
+                  class="input-fed"
+                  oninput="calcularTotal('fed')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>Prestação Aprovada</label>
+                <input
+                  type="number"
+                  id="fed-aprovada"
+                  class="input-fed"
+                  oninput="calcularTotal('fed')"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
+            <div class="total-box">
+              <span>Total de Prestações</span>
+              <strong id="fed-total">0</strong>
+            </div>
+          </div>
+
+          <div class="card admin-card">
+            <div class="card-header-admin">
+              <i class="fa-solid fa-map-location-dot"></i>
+              <h3>PDDE PAULISTA</h3>
+            </div>
+
+            <div class="input-rows">
+              <div class="input-group">
+                <label>Escola PC Não iniciada</label>
+                <input
+                  type="number"
+                  id="pau-nao-iniciada"
+                  class="input-pau"
+                  oninput="calcularTotal('pau')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>Escola Em Revisão</label>
+                <input
+                  type="number"
+                  id="pau-revisao"
+                  class="input-pau"
+                  oninput="calcularTotal('pau')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>U.R.E Em análise</label>
+                <input
+                  type="number"
+                  id="pau-analise"
+                  class="input-pau"
+                  oninput="calcularTotal('pau')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>SEDUC Aguardando Aprovação</label>
+                <input
+                  type="number"
+                  id="pau-seduc"
+                  class="input-pau"
+                  oninput="calcularTotal('pau')"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label>Prestação Aprovada</label>
+                <input
+                  type="number"
+                  id="pau-aprovada"
+                  class="input-pau"
+                  oninput="calcularTotal('pau')"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
+            <div class="total-box">
+              <span>Total de Prestações</span>
+              <strong id="pau-total">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <p class="last-update">
+            Última atualização: <span id="data-update">--/--/----</span>
+          </p>
+          <button type="submit" class="btn-save">
+            <i class="fa-solid fa-floppy-disk"></i> Publicar Gráficos
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <script src="admin-script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fluxo Prestação de Contas</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="fluxograma_contas.css" />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <button onclick="voltar()" class="btn-nav btn-voltar">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+      <div class="title-nav">
+        <i class="fa-solid fa-diagram-project"></i>
+        <span>Fluxo PDDE / Prestação de Contas</span>
+      </div>
+      <button onclick="imprimirFluxo()" class="btn-nav btn-print">
+        <i class="fa-solid fa-print"></i> Imprimir
+      </button>
+    </nav>
+
+    <main class="diagram-area">
+      <div class="grid-container">
+        <svg class="arrows-layer">
+          <defs>
+            <marker
+              id="arrowRed"
+              markerWidth="12"
+              markerHeight="12"
+              refX="10"
+              refY="3.5"
+              orient="auto"
+            >
+              <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626" />
+            </marker>
+          </defs>
+
+          <line
+            x1="610"
+            y1="445"
+            x2="550"
+            y2="445"
+            stroke="#dc2626"
+            stroke-width="4"
+            marker-end="url(#arrowRed)"
+          />
+
+          <path
+            d="M 360 445 L 70 445 L 70 250"
+            fill="none"
+            stroke="#dc2626"
+            stroke-width="4"
+            marker-end="url(#arrowRed)"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <div class="box gray-gradient start" style="grid-area: 1 / 2">
+          NÃO INICIADA<br />ESCOLA
+        </div>
+        <div
+          class="arrow-vertical"
+          style="grid-area: 1 / 2; align-self: end; margin-bottom: -25px"
+        >
+          ↓
+        </div>
+
+        <div class="box blue-dark" style="grid-area: 1 / 5">APROVADA</div>
+
+        <div class="box red-box correction" style="grid-area: 2 / 1">
+          CORREÇÃO<br />ESCOLAR
+        </div>
+        <div
+          class="arrow-horizontal"
+          style="
+            grid-area: 2 / 1;
+            justify-self: end;
+            margin-right: -35px;
+            color: #ef4444;
+          "
+        >
+          →
+        </div>
+
+        <div class="box green-box" style="grid-area: 2 / 2">
+          EM ANDAMENTO<br />ESCOLA
+        </div>
+        <div
+          class="arrow-vertical"
+          style="
+            grid-area: 2 / 2;
+            align-self: end;
+            margin-bottom: -25px;
+            color: #22c55e;
+          "
+        >
+          ↓
+        </div>
+
+        <div class="box orange-box" style="grid-area: 2 / 5">
+          AGUARDANDO<br />APROVAÇÃO SEDUC
+        </div>
+        <div
+          class="arrow-vertical"
+          style="
+            grid-area: 2 / 5;
+            align-self: start;
+            margin-top: -25px;
+            color: #3b82f6;
+          "
+        >
+          ↑
+        </div>
+
+        <div class="box yellow-box" style="grid-area: 3 / 2">
+          AGUARDANDO<br />AVALIAÇÃO URE
+        </div>
+        <div
+          class="arrow-horizontal"
+          style="
+            grid-area: 3 / 2;
+            justify-self: end;
+            margin-right: -35px;
+            color: #eab308;
+          "
+        >
+          →
+        </div>
+
+        <div class="box gray-solid" style="grid-area: 3 / 3">
+          EM AVALIAÇÃO<br />SEFIN
+        </div>
+        <div
+          class="arrow-horizontal"
+          style="
+            grid-area: 3 / 3;
+            justify-self: end;
+            margin-right: -35px;
+            color: #94a3b8;
+          "
+        >
+          →
+        </div>
+
+        <div class="box white-blue" style="grid-area: 3 / 4">
+          ANÁLISE<br />APROVADA
+        </div>
+        <div
+          class="arrow-horizontal"
+          style="
+            grid-area: 3 / 4;
+            justify-self: end;
+            margin-right: -35px;
+            color: #3b82f6;
+          "
+        >
+          →
+        </div>
+
+        <div
+          class="arrow-vertical"
+          style="
+            grid-area: 3 / 4;
+            align-self: end;
+            margin-bottom: -45px;
+            height: 50px;
+            color: #dc2626;
+          "
+        >
+          ↓
+        </div>
+
+        <div class="circle blue-circle" style="grid-area: 3 / 5">SIM</div>
+        <div
+          class="arrow-vertical"
+          style="
+            grid-area: 3 / 5;
+            align-self: start;
+            margin-top: -25px;
+            color: #3b82f6;
+          "
+        >
+          ↑
+        </div>
+
+        <div class="box red-full" style="grid-area: 4 / 3">EM REVISÃO</div>
+
+        <div class="circle red-circle" style="grid-area: 4 / 4">NÃO</div>
+      </div>
+    </main>
+
+    <script src="fluxograma_contas.js"></script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparência SEAFIN - Consulta Pública</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="stylesheet" href="publico_seafin.css">
+</head>
+
+<body>
+
+    <a href="index.html" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Voltar ao Portal
+    </a>
+
+    <div class="container">
+
+        <header class="public-header">
+            <div class="icon-header">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+            <h1>Transparência SEAFIN</h1>
+            <p>Consulta pública de contratos de Transporte e Bilhetagem</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="mudarAba('bilhetagem')">Bilhetagem</div>
+            <div class="tab" onclick="mudarAba('emtu')">Contrato EMTU</div>
+            <div class="tab" onclick="mudarAba('pae')">PAE-AVD</div>
+        </div>
+
+        <div class="filter-box">
+            <label for="filtroProtocolo">Selecione o Processo / Contrato:</label>
+            <select id="filtroProtocolo" onchange="carregarDados()">
+                <option value="">-- Carregando opções... --</option>
+            </select>
+        </div>
+
+        <div id="resultadoArea" class="hidden">
+
+            <div class="total-card">
+                <div class="total-info">
+                    <span>Total de Alunos Beneficiados</span>
+                    <h2 id="totalNumero">0</h2>
+                </div>
+                <div class="total-icon">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Detalhamento por Unidade Escolar</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Escola</th>
+                            <th class="text-right">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaEscolas">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div id="msgVazia" class="empty-state">
+            <i class="fa-regular fa-folder-open"></i>
+            <p>Selecione um processo acima para visualizar os dados.</p>
+        </div>
+
+    </div>
+
+    <footer class="footer-simple">
+        &copy; 2026 SEAFIN - Dados atualizados em tempo real.
+    </footer>
+
+    <script src="publico_seafin.js"></script>
+</body>
+
+</html>

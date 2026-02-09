@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEFIN - Suporte</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+
+  <body>
+    <header class="portal-header">
+      <div class="container-header">
+        <div
+          class="brand-logo"
+          onclick="window.location.href = 'index.html'"
+          style="cursor: pointer"
+        >
+          <i class="fa-solid fa-landmark"></i>
+          <div class="brand-text">
+            <h1>SEFIN / SEAFIN</h1>
+            <span>Portal de Finanças e Gestão</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 15px">
+          <a href="fluxograma.html" class="link-admin btn-fluxo">
+            <i class="fa-solid fa-van-shuttle"></i> Fluxo Transporte
+          </a>
+
+          <a href="fluxograma_contas.html" class="link-admin btn-fluxo">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Fluxo Prestação de
+            Contas
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="section-title">
+        <h2>Obter Suporte</h2>
+        <p>Selecione o serviço desejado para iniciar o atendimento</p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card" onclick="abrirFormulario('diaria')">
+          <div class="icon-container">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <h3>Diária</h3>
+          <p>Pagamentos, SIAFEM e Transporte</p>
+          <span class="btn-text"
+            >Acessar <i class="fa-solid fa-arrow-right"></i
+          ></span>
+        </div>
+
+        <div class="card" onclick="abrirFormulario('federal')">
+          <div class="icon-container">
+            <i class="fa-solid fa-building-columns"></i>
+          </div>
+          <h3>PDDE Federal</h3>
+          <p>Gestão Ágil, Erros e Repasses</p>
+          <span class="btn-text"
+            >Acessar <i class="fa-solid fa-arrow-right"></i
+          ></span>
+        </div>
+
+        <div class="card" onclick="abrirFormulario('paulista')">
+          <div class="icon-container">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
+          <h3>PDDE Paulista</h3>
+          <p>Notas Fiscais e Prestação de Contas</p>
+          <span class="btn-text"
+            >Acessar <i class="fa-solid fa-arrow-right"></i
+          ></span>
+        </div>
+
+        <div class="card" onclick="abrirFormulario('duvidas')">
+          <div class="icon-container">
+            <i class="fa-solid fa-circle-question"></i>
+          </div>
+          <h3>Dúvidas / Orientações</h3>
+          <p>Atendimento Presencial e Online</p>
+          <span class="btn-text"
+            >Agendar <i class="fa-solid fa-arrow-right"></i
+          ></span>
+        </div>
+
+        <div class="card" onclick="abrirFormulario('fatura')">
+          <div class="icon-container">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <h3>Telefone / Informação</h3>
+          <p>Envio de documentos diversos</p>
+          <span class="btn-text"
+            >Acessar <i class="fa-solid fa-arrow-right"></i
+          ></span>
+        </div>
+      </div>
+    </main>
+
+    <div id="modalOverlay" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="tituloModal">Título do Serviço</h3>
+          <button class="close-btn" onclick="fecharModal()">&times;</button>
+        </div>
+
+        <form id="formSuporte" onsubmit="enviarFormulario(event)">
+          <input
+            type="hidden"
+            id="horarioEscolhido"
+            name="horario_agendamento"
+          />
+
+          <div class="form-section">
+            <h4>Dados do Solicitante</h4>
+            <div class="input-group">
+              <label>Nome Completo *</label>
+              <input type="text" placeholder="Nome Completo" required />
+            </div>
+            <div class="row">
+              <div class="input-group">
+                <label>CPF *</label>
+                <input type="text" placeholder="CPF" required />
+              </div>
+
+              <div class="input-group">
+                <label>Unidade Escolar *</label>
+                <select id="unidadeEscolar" required>
+                  <option value="" disabled selected>
+                    -- Selecione a Escola --
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>E-mail Institucional *</label>
+              <input type="email" placeholder="E-mail" required />
+            </div>
+          </div>
+
+          <div class="form-section bg-light">
+            <h4>Detalhes da Solicitação</h4>
+            <div id="areaDinamica"></div>
+          </div>
+
+          <div class="form-section">
+            <div class="input-group">
+              <label>Observações (Explique a situação) *</label>
+              <textarea rows="3" required></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" onclick="fecharModal()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-submit">Enviar Solicitação</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="agendaModal" class="modal-overlay" style="display: none">
+      <div class="modal-content agenda-content">
+        <div class="modal-header-agenda" style="position: relative">
+          <span
+            class="close-btn"
+            onclick="fecharAgenda()"
+            style="position: absolute; top: 20px; right: 20px; color: white"
+            >&times;</span
+          >
+
+          <h2>
+            <i class="fa-regular fa-calendar-check"></i> Agendamento - Fevereiro
+            2026
+          </h2>
+          <p>Selecione um horário disponível para atendimento:</p>
+        </div>
+
+        <div class="agenda-scroll-area">
+          <div class="agenda-columns">
+            <div class="day-column">
+              <h3>Segunda-Feira</h3>
+              <i class="fa-regular fa-calendar day-icon"></i>
+
+              <div class="date-group">
+                <span class="date-label">Dia 02/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('02/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('02/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 09/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('09/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('09/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 16/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('16/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('16/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 23/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('23/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('23/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+            </div>
+
+            <div class="day-column">
+              <h3>Quarta-Feira</h3>
+              <i class="fa-regular fa-calendar day-icon"></i>
+
+              <div class="date-group">
+                <span class="date-label">Dia 04/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('04/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('04/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 11/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('11/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('11/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 18/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('18/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('18/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 25/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('25/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('25/02 - 15:00')"
+                >
+                  15:00 - 17:00
+                </button>
+              </div>
+            </div>
+
+            <div class="day-column">
+              <h3>Sexta-Feira</h3>
+              <i class="fa-regular fa-calendar day-icon"></i>
+
+              <div class="date-group">
+                <span class="date-label">Dia 06/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('06/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('06/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 13/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('13/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('13/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 20/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('20/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('20/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+
+              <div class="date-group">
+                <span class="date-label">Dia 27/02</span>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('27/02 - 08:30')"
+                >
+                  08:30 - 10:30
+                </button>
+                <button
+                  class="time-btn"
+                  onclick="confirmarAgendamento('27/02 - 11:00')"
+                >
+                  11:00 - 13:00
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

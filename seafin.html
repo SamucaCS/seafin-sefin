@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEAFIN - Lançamento de Contratos</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="seafin.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1><i class="fa-solid fa-file-contract"></i> Lançamento de Contratos SEAFIN</h1>
+
+        <div class="tabs">
+            <div class="tab active" onclick="mudarAba('bilhetagem')">Bilhetagem</div>
+            <div class="tab" onclick="mudarAba('emtu')">Contrato EMTU</div>
+            <div class="tab" onclick="mudarAba('pae')">PAE-AVD-SEDUC</div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-row">
+                <div class="input-group" id="grupo-identificador">
+                    <label id="label-identificador">Protocolo SEI</label>
+                    <input type="text" id="identificador" placeholder="Digite o código...">
+                </div>
+                <div class="input-group" id="grupo-vigencia">
+                    <label>Vigência</label>
+                    <input type="text" id="vigencia" placeholder="Ex: 21.01 a 31.12">
+                </div>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+            <div class="form-row">
+                <div class="input-group" style="flex: 3;">
+                    <label>Selecionar Escola (Diretoria de Ensino de Suzano)</label>
+                    <select id="escolaSelect">
+                        <option value="">-- Selecione a Escola --</option>
+                    </select>
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label>Qtd. Alunos</label>
+                    <input type="number" id="qtdAlunos" placeholder="0">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button id="btnSalvar" class="btn-add" onclick="salvarRegistro()">
+                    <i class="fa-solid fa-plus"></i> Adicionar Escola ao Contrato
+                </button>
+
+                <button id="btnCancelar" class="btn-add" onclick="cancelarEdicao()"
+                    style="background: #95a5a6; display: none;">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </button>
+            </div>
+        </div>
+
+        <div class="resumo-area">
+            <h3>Registros do Contrato Atual</h3>
+            <table id="tabelaRegistros">
+                <thead>
+                    <tr>
+                        <th>Escola</th>
+                        <th>Qtd. Alunos</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-escolas">
+                </tbody>
+            </table>
+
+            <div class="total-box">
+                Total de Alunos neste Contrato: <span id="totalAlunos" class="big-number">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="seafin.js"></script>
+</body>
+
+</html>
