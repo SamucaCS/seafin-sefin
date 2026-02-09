@@ -83,7 +83,6 @@ function carregarEscolas() {
   const select = document.getElementById("escolaSelect");
   if (!select) return;
 
-  // Limpa opções anteriores para não duplicar se chamar 2x
   select.innerHTML =
     '<option value="" disabled selected>-- Selecione a Escola --</option>';
 
@@ -100,8 +99,6 @@ function mudarAba(tipo) {
   abaAtual = tipo;
   cancelarEdicao();
 
-  // --- CORREÇÃO IMPORTANTE AQUI ---
-  // Limpa o campo identificador ao trocar de aba para não filtrar errado
   const inputIdentificador = document.getElementById("identificador");
   if (inputIdentificador) {
     inputIdentificador.value = "";
@@ -112,7 +109,6 @@ function mudarAba(tipo) {
     .querySelectorAll(".tab")
     .forEach((t) => t.classList.remove("active"));
 
-  // Verifica se o evento existe para evitar erro se chamado manualmente
   if (event && event.target) {
     event.target.classList.add("active");
   }
@@ -151,7 +147,7 @@ async function salvarRegistro() {
 
   try {
     let error;
-    // Ajuste para garantir que identificador vazio vá como null ou string vazia consistente
+
     const identToSave = identificador || "";
 
     if (idEmEdicao) {
@@ -160,7 +156,7 @@ async function salvarRegistro() {
         .update({
           nome_escola: escola,
           qtd_alunos: parseInt(qtd),
-          identificador: identToSave, // Garante que atualiza o ID também se mudou
+          identificador: identToSave, 
           vigencia: vigencia,
         })
         .eq("id", idEmEdicao);
@@ -193,9 +189,6 @@ function prepararEdicao(id, escola, qtd) {
   document.getElementById("escolaSelect").value = escola;
   document.getElementById("qtdAlunos").value = qtd;
 
-  // Tenta preencher identificador e vigencia se existirem no grid (opcional, mas bom pra UX)
-  // Como a tabela não mostra ID/Vigencia nas colunas, mantemos assim.
-
   const btn = document.getElementById("btnSalvar");
   btn.innerHTML = '<i class="fa-solid fa-pen"></i> Atualizar Registro';
   btn.style.background = "#2980b9";
@@ -207,9 +200,7 @@ function cancelarEdicao() {
   idEmEdicao = null;
   document.getElementById("escolaSelect").value = "";
   document.getElementById("qtdAlunos").value = "";
-  // Opcional: limpar identificador/vigencia também ao cancelar
-  // document.getElementById('identificador').value = "";
-  // document.getElementById('vigencia').value = "";
+ 
 
   const btn = document.getElementById("btnSalvar");
   btn.innerHTML =
@@ -229,7 +220,6 @@ async function carregarDadosTabela() {
     .select("*")
     .eq("tipo_contrato", abaAtual);
 
-  // Só filtra pelo identificador se ele tiver algum valor escrito
   if (identificador && identificador.trim() !== "") {
     query = query.eq("identificador", identificador);
   }
@@ -240,7 +230,6 @@ async function carregarDadosTabela() {
   tbody.innerHTML = "";
   let somaTotal = 0;
 
-  // Se não tiver dados, mostra mensagem amigável (exceto se for filtro)
   if (data.length === 0) {
     tbody.innerHTML =
       '<tr><td colspan="3" style="text-align:center; padding:20px; color:#777;">Nenhum registro encontrado nesta categoria.</td></tr>';
@@ -281,8 +270,6 @@ async function removerItem(id) {
   carregarDadosTabela();
 }
 
-// Ouve mudanças no campo de identificador para filtrar em tempo real (ou ao sair do campo)
 document.getElementById("identificador").addEventListener("input", function () {
-  // Pequeno delay (debounce) poderia ser útil, mas direto funciona bem para listas pequenas
   carregarDadosTabela();
 });
