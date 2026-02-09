@@ -32,7 +32,7 @@ function mudarAba(tipo) {
 
 async function carregarFiltros() {
   const select = document.getElementById("filtroProtocolo");
-  select.innerHTML = '<option value="">Carregando...</option>';
+  select.innerHTML = '<option value="">Carregando..</option>';
 
   const { data, error } = await _supabase
     .from("seafin_lancamentos")
