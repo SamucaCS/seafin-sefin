@@ -5,12 +5,37 @@ const SUPABASE_KEY =
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function carregarChamados() {
-  const tbody = document.getElementById("lista-corpo");
-  const loading = document.getElementById("loading");
+// Aba atualmente visível
+let abaAtiva = "Pendente";
 
-  tbody.innerHTML = "";
+// ── Troca de aba ──────────────────────────────────────────────
+function trocarAba(status, btnEl) {
+  // Esconde todos os painéis
+  document.querySelectorAll(".painel-aba").forEach((p) => (p.style.display = "none"));
+
+  // Remove active de todos os botões
+  document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+
+  // Mostra o painel correto e marca botão
+  const painel = document.getElementById(`painel-${status}`);
+  if (painel) painel.style.display = "block";
+  if (btnEl) btnEl.classList.add("active");
+
+  abaAtiva = status;
+}
+
+// ── Carrega todos os chamados e distribui nas abas ────────────
+async function carregarChamados() {
+  const loading = document.getElementById("loading");
   if (loading) loading.style.display = "block";
+
+  // Limpa todos os corpos de tabela
+  ["Pendente", "Em Andamento", "Concluido", "Cancelado"].forEach((s) => {
+    const corpo = document.getElementById(`corpo-${s}`);
+    if (corpo) corpo.innerHTML = "";
+    const vazio = document.getElementById(`vazio-${s}`);
+    if (vazio) vazio.style.display = "none";
+  });
 
   try {
     const { data, error } = await _supabase
@@ -19,17 +44,33 @@ async function carregarChamados() {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-
     if (loading) loading.style.display = "none";
 
-    if (data.length === 0) {
-      tbody.innerHTML =
-        '<tr><td colspan="10" style="text-align:center; padding: 20px;">Nenhum chamado encontrado.</td></tr>';
-      return;
-    }
+    // Contadores por status
+    const contadores = { Pendente: 0, "Em Andamento": 0, Concluido: 0, Cancelado: 0 };
 
     data.forEach((chamado) => {
-      renderizarLinha(chamado, tbody);
+      const status = chamado.status || "Pendente";
+      const corpo = document.getElementById(`corpo-${status}`);
+      if (corpo) {
+        renderizarLinha(chamado, corpo);
+        if (contadores[status] !== undefined) contadores[status]++;
+      }
+    });
+
+    // Atualiza badges
+    Object.entries(contadores).forEach(([status, qtd]) => {
+      const badge = document.getElementById(`badge-${status}`);
+      if (badge) badge.textContent = qtd;
+    });
+
+    // Mostra mensagem de vazio onde não há registros
+    ["Pendente", "Em Andamento", "Concluido", "Cancelado"].forEach((s) => {
+      const corpo = document.getElementById(`corpo-${s}`);
+      const vazio = document.getElementById(`vazio-${s}`);
+      if (corpo && vazio && corpo.innerHTML.trim() === "") {
+        vazio.style.display = "block";
+      }
     });
   } catch (erro) {
     console.error(erro);
@@ -37,14 +78,15 @@ async function carregarChamados() {
   }
 }
 
+// ── Renderiza uma linha na tabela correta ─────────────────────
 function renderizarLinha(chamado, tbody) {
   const dataFormatada = chamado.created_at
     ? new Date(chamado.created_at).toLocaleDateString("pt-BR") +
-      " às " +
-      new Date(chamado.created_at).toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+    " às " +
+    new Date(chamado.created_at).toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
     : "-";
 
   let servicoHtml = `<strong>${chamado.tipo_servico || "Serviço não informado"}</strong>`;
@@ -52,25 +94,20 @@ function renderizarLinha(chamado, tbody) {
   if (chamado.detalhe_solicitacao) {
     servicoHtml += `<br><span style="color:#2980b9; font-size:13px; font-weight:600;">• ${chamado.detalhe_solicitacao}</span>`;
   }
-
   if (chamado.exercicio) {
     servicoHtml += `<br><span style="color:#8e44ad; font-size:12px; font-weight:600;">📅 Exercício: ${chamado.exercicio}</span>`;
   }
-
   if (chamado.programa) {
     servicoHtml += `<br><span style="color:#16a085; font-size:12px; font-weight:600;">📂 Programa: ${chamado.programa}</span>`;
   }
-
   if (chamado.horario_agendamento) {
     servicoHtml += `<br><small style="color:#e67e22; font-weight:bold"><i class="fa-regular fa-clock"></i> ${chamado.horario_agendamento}</small>`;
   }
-
   if (chamado.observacao) {
     servicoHtml += `
-            <div style="margin-top: 6px; background: #f8f9fa; border-left: 3px solid #95a5a6; padding: 4px 8px; font-size: 12px; color: #555; font-style: italic;">
-                <strong>Obs:</strong> ${chamado.observacao}
-            </div>
-        `;
+      <div style="margin-top:6px; background:#f8f9fa; border-left:3px solid #95a5a6; padding:4px 8px; font-size:12px; color:#555; font-style:italic;">
+        <strong>Obs:</strong> ${chamado.observacao}
+      </div>`;
   }
 
   let docsHtml = "";
@@ -87,49 +124,49 @@ function renderizarLinha(chamado, tbody) {
     ? `<a href="mailto:${chamado.email}" style="color:#2980b9; text-decoration:none;">${chamado.email}</a>`
     : '<span style="color:#999">-</span>';
 
-  const nomeExibir = chamado.nome
-    ? chamado.nome
-    : '<span style="color:#999; font-style:italic;">Sem Nome</span>';
-  const cpfExibir = chamado.cpf ? chamado.cpf : "";
+  const nomeExibir = chamado.nome || '<span style="color:#999; font-style:italic;">Sem Nome</span>';
+  const cpfExibir = chamado.cpf || "";
 
   const escolaExibir = chamado.unidade_escolar
-    ? `<div style="font-size:13px; color:#444;"><i class="fa-solid fa-school" style="color:#27ae60; margin-right:5px;"></i> ${chamado.unidade_escolar}</div>`
+    ? `<div style="font-size:13px; color:#444;"><i class="fa-solid fa-school" style="color:#27ae60; margin-right:5px;"></i>${chamado.unidade_escolar}</div>`
     : '<span style="color:#ccc; font-size:12px;">-</span>';
 
-  const row = `
-        <tr>
-            <td><strong>#${chamado.protocolo || "..."}</strong></td>
-            <td>${dataFormatada}</td>
-            <td>
-                <div style="font-weight:bold; color:#2c3e50;">${nomeExibir}</div>
-                <small style="color:#777">${cpfExibir}</small>
-            </td>
-            <td>${escolaExibir}</td> <td>${emailHtml}</td>
-            <td>${servicoHtml}</td>
-            <td>${docsHtml}</td>
-            <td>
-                <select onchange="atualizarStatus('${chamado.id}', this.value)" class="select-status ${statusClass}">
-                    <option value="Pendente" ${chamado.status === "Pendente" ? "selected" : ""}>Pendente</option>
-                    <option value="Em Andamento" ${chamado.status === "Em Andamento" ? "selected" : ""}>Em Andamento</option>
-                    <option value="Concluido" ${chamado.status === "Concluido" ? "selected" : ""}>Concluído</option>
-                    <option value="Cancelado" ${chamado.status === "Cancelado" ? "selected" : ""}>Cancelado</option>
-                </select>
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn-action btn-edit" title="Editar" onclick="editarChamado('${chamado.id}', '${chamado.nome || ""}', '${chamado.cpf || ""}', '${chamado.observacao || ""}')">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="btn-action btn-delete" title="Excluir" onclick="excluirChamado('${chamado.id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `;
-  tbody.innerHTML += row;
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td><strong>#${chamado.protocolo || "..."}</strong></td>
+    <td>${dataFormatada}</td>
+    <td>
+      <div style="font-weight:bold; color:#2c3e50;">${nomeExibir}</div>
+      <small style="color:#777">${cpfExibir}</small>
+    </td>
+    <td>${escolaExibir}</td>
+    <td>${emailHtml}</td>
+    <td>${servicoHtml}</td>
+    <td>${docsHtml}</td>
+    <td>
+      <select onchange="atualizarStatus('${chamado.id}', this.value)" class="select-status ${statusClass}">
+        <option value="Pendente"     ${chamado.status === "Pendente" ? "selected" : ""}>Pendente</option>
+        <option value="Em Andamento" ${chamado.status === "Em Andamento" ? "selected" : ""}>Em Andamento</option>
+        <option value="Concluido"    ${chamado.status === "Concluido" ? "selected" : ""}>Concluído</option>
+        <option value="Cancelado"    ${chamado.status === "Cancelado" ? "selected" : ""}>Cancelado</option>
+      </select>
+    </td>
+    <td>
+      <div class="action-buttons">
+        <button class="btn-action btn-edit" title="Editar"
+          onclick="editarChamado('${chamado.id}', '${(chamado.nome || "").replace(/'/g, "\\'")}', '${(chamado.cpf || "").replace(/'/g, "\\'")}', '${(chamado.observacao || "").replace(/'/g, "\\'")}')">
+          <i class="fas fa-pen"></i>
+        </button>
+        <button class="btn-action btn-delete" title="Excluir" onclick="excluirChamado('${chamado.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </td>
+  `;
+  tbody.appendChild(row);
 }
 
+// ── Atualiza status e move para a aba correta ─────────────────
 async function atualizarStatus(id, novoStatus) {
   try {
     const { error } = await _supabase
@@ -144,6 +181,7 @@ async function atualizarStatus(id, novoStatus) {
   }
 }
 
+// ── Editar ────────────────────────────────────────────────────
 async function editarChamado(id, nomeAtual, cpfAtual, obsAtual) {
   const novoNome = prompt("Editar Nome:", nomeAtual);
   if (novoNome === null) return;
@@ -157,11 +195,7 @@ async function editarChamado(id, nomeAtual, cpfAtual, obsAtual) {
   try {
     const { error } = await _supabase
       .from("chamados")
-      .update({
-        nome: novoNome,
-        cpf: novoCpf,
-        observacao: novaObs,
-      })
+      .update({ nome: novoNome, cpf: novoCpf, observacao: novaObs })
       .eq("id", id);
 
     if (error) throw error;
@@ -173,15 +207,13 @@ async function editarChamado(id, nomeAtual, cpfAtual, obsAtual) {
   }
 }
 
+// ── Excluir ───────────────────────────────────────────────────
 async function excluirChamado(id) {
-  const confirmacao = confirm(
-    "Tem certeza que deseja excluir este chamado permanentemente?",
-  );
+  const confirmacao = confirm("Tem certeza que deseja excluir este chamado permanentemente?");
   if (!confirmacao) return;
 
   try {
     const { error } = await _supabase.from("chamados").delete().eq("id", id);
-
     if (error) throw error;
     alert("Chamado excluído com sucesso.");
     carregarChamados();

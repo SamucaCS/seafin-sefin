@@ -1,35 +1,54 @@
 <!doctype html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Painel de Chamados - SEFIN</title>
 
-    <link rel="stylesheet" href="painel.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel de Chamados - SEFIN</title>
+  <link rel="stylesheet" href="painel.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script src="painel.js" defer></script>
+</head>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+<body>
+  <header>
+    <h1><i class="fa-solid fa-landmark"></i> Gerenciamento de Chamados</h1>
+  </header>
 
-    <script src="painel.js" defer></script>
-  </head>
+  <div class="container">
+    <div class="toolbar">
+      <button onclick="carregarChamados()" class="btn-refresh">
+        <i class="fas fa-rotate-right"></i> Atualizar Lista
+      </button>
+    </div>
 
-  <body>
-    <header>
-      <h1>Gerenciamento de Chamados</h1>
-    </header>
+    <!-- Abas de status -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="trocarAba('Pendente', this)">
+        <i class="fas fa-clock"></i> Pendente
+        <span class="badge badge-pendente" id="badge-Pendente">0</span>
+      </button>
+      <button class="tab-btn" onclick="trocarAba('Em Andamento', this)">
+        <i class="fas fa-spinner"></i> Em Andamento
+        <span class="badge badge-andamento" id="badge-Em Andamento">0</span>
+      </button>
+      <button class="tab-btn" onclick="trocarAba('Concluido', this)">
+        <i class="fas fa-circle-check"></i> Concluído
+        <span class="badge badge-concluido" id="badge-Concluido">0</span>
+      </button>
+      <button class="tab-btn" onclick="trocarAba('Cancelado', this)">
+        <i class="fas fa-ban"></i> Cancelado
+        <span class="badge badge-cancelado" id="badge-Cancelado">0</span>
+      </button>
+    </div>
 
-    <div class="container">
-      <div class="toolbar">
-        <button onclick="carregarChamados()" class="btn-refresh">
-          ↻ Atualizar Lista
-        </button>
-      </div>
+    <!-- Painel de cada aba -->
+    <div class="table-container">
+      <div id="loading" class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando chamados...</div>
 
-      <div class="table-container">
-        <table id="tabelaChamados">
+      <div id="painel-Pendente" class="painel-aba">
+        <table>
           <thead>
             <tr>
               <th>Protocolo</th>
@@ -43,11 +62,84 @@
               <th>Ação</th>
             </tr>
           </thead>
-          <tbody id="lista-corpo"></tbody>
+          <tbody id="corpo-Pendente"></tbody>
         </table>
+        <div class="vazio" id="vazio-Pendente" style="display:none;">
+          <i class="fas fa-inbox"></i>
+          <p>Nenhum chamado pendente.</p>
+        </div>
+      </div>
 
-        <div id="loading" class="loading">Carregando chamados...</div>
+      <div id="painel-Em Andamento" class="painel-aba" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Data</th>
+              <th>Nome / CPF</th>
+              <th>Escola</th>
+              <th>Contato</th>
+              <th>Serviço</th>
+              <th>Documentos</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-Em Andamento"></tbody>
+        </table>
+        <div class="vazio" id="vazio-Em Andamento" style="display:none;">
+          <i class="fas fa-inbox"></i>
+          <p>Nenhum chamado em andamento.</p>
+        </div>
+      </div>
+
+      <div id="painel-Concluido" class="painel-aba" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Data</th>
+              <th>Nome / CPF</th>
+              <th>Escola</th>
+              <th>Contato</th>
+              <th>Serviço</th>
+              <th>Documentos</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-Concluido"></tbody>
+        </table>
+        <div class="vazio" id="vazio-Concluido" style="display:none;">
+          <i class="fas fa-inbox"></i>
+          <p>Nenhum chamado concluído.</p>
+        </div>
+      </div>
+
+      <div id="painel-Cancelado" class="painel-aba" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Data</th>
+              <th>Nome / CPF</th>
+              <th>Escola</th>
+              <th>Contato</th>
+              <th>Serviço</th>
+              <th>Documentos</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-Cancelado"></tbody>
+        </table>
+        <div class="vazio" id="vazio-Cancelado" style="display:none;">
+          <i class="fas fa-inbox"></i>
+          <p>Nenhum chamado cancelado.</p>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
