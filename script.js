@@ -100,21 +100,26 @@ const opcoesMenu = {
   fatura: ["Envio de Fatura", "Informação Geral", "Outros"],
 };
 
+// =============================================
+//  AGENDA DINÂMICA
+// =============================================
 function gerarAgendaDinamica() {
   const agora = new Date();
   const ano = agora.getFullYear();
-  const mes = agora.getMonth(); 
+  const mes = agora.getMonth(); // 0-based
 
   const nomesMeses = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
   ];
 
+  // Atualiza o título do modal com mês e ano atuais
   const tituloEl = document.getElementById("tituloAgendaMes");
   if (tituloEl) {
     tituloEl.textContent = `Agendamento - ${nomesMeses[mes]} ${ano}`;
   }
 
+  // Horários fixos por dia da semana (1=Seg, 3=Qua, 5=Sex)
   const horariosPorDia = {
     1: [{ inicio: "08:30", fim: "10:30" }, { inicio: "11:00", fim: "13:00" }],
     3: [{ inicio: "11:00", fim: "13:00" }, { inicio: "15:00", fim: "17:00" }],
@@ -127,16 +132,28 @@ function gerarAgendaDinamica() {
     5: "Sexta-Feira",
   };
 
+  // Data de hoje sem horário — bloqueia agendamentos no mesmo dia
+  // O cliente só consegue agendar com no mínimo 1 dia de antecedência
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  const amanha = new Date(hoje);
+  amanha.setDate(hoje.getDate() + 1);
+
+  // Agrupa dias do mês por dia da semana — apenas datas >= amanhã
   const diasPorSemana = { 1: [], 3: [], 5: [] };
   const totalDias = new Date(ano, mes + 1, 0).getDate();
 
   for (let d = 1; d <= totalDias; d++) {
-    const diaSemana = new Date(ano, mes, d).getDay();
-    if (diaSemana in diasPorSemana) {
+    const dataVerificada = new Date(ano, mes, d);
+    dataVerificada.setHours(0, 0, 0, 0);
+    const diaSemana = dataVerificada.getDay();
+    if (diaSemana in diasPorSemana && dataVerificada >= amanha) {
       diasPorSemana[diaSemana].push(d);
     }
   }
 
+  // Monta as colunas no container
   const container = document.getElementById("agendaColumns");
   if (!container) return;
   container.innerHTML = "";
@@ -149,30 +166,39 @@ function gerarAgendaDinamica() {
       <i class="fa-regular fa-calendar day-icon"></i>
     `;
 
-    diasPorSemana[diaSemana].forEach((dia) => {
-      const diaFormatado = String(dia).padStart(2, "0");
-      const mesFormatado = String(mes + 1).padStart(2, "0");
-      const label = `${diaFormatado}/${mesFormatado}`;
+    if (diasPorSemana[diaSemana].length === 0) {
+      // Nenhuma data disponível nesta coluna
+      const aviso = document.createElement("p");
+      aviso.style.cssText = "color:#999; font-size:13px; text-align:center; margin-top:16px;";
+      aviso.textContent = "Sem datas disponíveis este mês.";
+      col.appendChild(aviso);
+    } else {
+      diasPorSemana[diaSemana].forEach((dia) => {
+        const diaFormatado = String(dia).padStart(2, "0");
+        const mesFormatado = String(mes + 1).padStart(2, "0");
+        const label = `${diaFormatado}/${mesFormatado}`;
 
-      const group = document.createElement("div");
-      group.className = "date-group";
+        const group = document.createElement("div");
+        group.className = "date-group";
 
-      let html = `<span class="date-label">Dia ${label}</span>`;
-      horariosPorDia[diaSemana].forEach((h) => {
-        html += `
-          <button class="time-btn" onclick="confirmarAgendamento('${label} - ${h.inicio}')">
-            ${h.inicio} - ${h.fim}
-          </button>
-        `;
+        let html = `<span class="date-label">Dia ${label}</span>`;
+        horariosPorDia[diaSemana].forEach((h) => {
+          html += `
+            <button class="time-btn" onclick="confirmarAgendamento('${label} - ${h.inicio}')">
+              ${h.inicio} - ${h.fim}
+            </button>
+          `;
+        });
+
+        group.innerHTML = html;
+        col.appendChild(group);
       });
-
-      group.innerHTML = html;
-      col.appendChild(group);
-    });
+    }
 
     container.appendChild(col);
   });
 }
+// =============================================
 
 function carregarEscolas() {
   const select = document.getElementById("unidadeEscolar");
@@ -190,7 +216,7 @@ function abrirFormulario(tipoServico) {
   if (tipoServico === "duvidas") {
     const agendaModal = document.getElementById("agendaModal");
     if (agendaModal) {
-      gerarAgendaDinamica();
+      gerarAgendaDinamica(); // <-- gera as datas do mês atual
       agendaModal.style.display = "flex";
       verificarDisponibilidade();
     } else {
