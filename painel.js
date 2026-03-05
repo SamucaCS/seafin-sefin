@@ -4,19 +4,12 @@ const SUPABASE_KEY =
 
 const { createClient } = window.supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Aba atualmente visível
 let abaAtiva = "Pendente";
 
-// ── Troca de aba ──────────────────────────────────────────────
 function trocarAba(status, btnEl) {
-  // Esconde todos os painéis
   document.querySelectorAll(".painel-aba").forEach((p) => (p.style.display = "none"));
-
-  // Remove active de todos os botões
   document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
 
-  // Mostra o painel correto e marca botão
   const painel = document.getElementById(`painel-${status}`);
   if (painel) painel.style.display = "block";
   if (btnEl) btnEl.classList.add("active");
@@ -24,12 +17,10 @@ function trocarAba(status, btnEl) {
   abaAtiva = status;
 }
 
-// ── Carrega todos os chamados e distribui nas abas ────────────
 async function carregarChamados() {
   const loading = document.getElementById("loading");
   if (loading) loading.style.display = "block";
 
-  // Limpa todos os corpos de tabela
   ["Pendente", "Em Andamento", "Concluido", "Cancelado"].forEach((s) => {
     const corpo = document.getElementById(`corpo-${s}`);
     if (corpo) corpo.innerHTML = "";
@@ -46,7 +37,6 @@ async function carregarChamados() {
     if (error) throw error;
     if (loading) loading.style.display = "none";
 
-    // Contadores por status
     const contadores = { Pendente: 0, "Em Andamento": 0, Concluido: 0, Cancelado: 0 };
 
     data.forEach((chamado) => {
@@ -58,13 +48,11 @@ async function carregarChamados() {
       }
     });
 
-    // Atualiza badges
     Object.entries(contadores).forEach(([status, qtd]) => {
       const badge = document.getElementById(`badge-${status}`);
       if (badge) badge.textContent = qtd;
     });
 
-    // Mostra mensagem de vazio onde não há registros
     ["Pendente", "Em Andamento", "Concluido", "Cancelado"].forEach((s) => {
       const corpo = document.getElementById(`corpo-${s}`);
       const vazio = document.getElementById(`vazio-${s}`);
@@ -78,7 +66,6 @@ async function carregarChamados() {
   }
 }
 
-// ── Renderiza uma linha na tabela correta ─────────────────────
 function renderizarLinha(chamado, tbody) {
   const dataFormatada = chamado.created_at
     ? new Date(chamado.created_at).toLocaleDateString("pt-BR") +
@@ -166,7 +153,6 @@ function renderizarLinha(chamado, tbody) {
   tbody.appendChild(row);
 }
 
-// ── Atualiza status e move para a aba correta ─────────────────
 async function atualizarStatus(id, novoStatus) {
   try {
     const { error } = await _supabase
@@ -181,7 +167,6 @@ async function atualizarStatus(id, novoStatus) {
   }
 }
 
-// ── Editar ────────────────────────────────────────────────────
 async function editarChamado(id, nomeAtual, cpfAtual, obsAtual) {
   const novoNome = prompt("Editar Nome:", nomeAtual);
   if (novoNome === null) return;
@@ -207,7 +192,6 @@ async function editarChamado(id, nomeAtual, cpfAtual, obsAtual) {
   }
 }
 
-// ── Excluir ───────────────────────────────────────────────────
 async function excluirChamado(id) {
   const confirmacao = confirm("Tem certeza que deseja excluir este chamado permanentemente?");
   if (!confirmacao) return;
