@@ -100,9 +100,83 @@ const opcoesMenu = {
   fatura: ["Envio de Fatura", "Informação Geral", "Outros"],
 };
 
+function gerarAgendaDinamica() {
+  const agora = new Date();
+  const ano = agora.getFullYear();
+  const mes = agora.getMonth(); 
+
+  const nomesMeses = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+  ];
+
+  const tituloEl = document.getElementById("tituloAgendaMes");
+  if (tituloEl) {
+    tituloEl.textContent = `Agendamento - ${nomesMeses[mes]} ${ano}`;
+  }
+
+  const horariosPorDia = {
+    1: [{ inicio: "08:30", fim: "10:30" }, { inicio: "11:00", fim: "13:00" }],
+    3: [{ inicio: "11:00", fim: "13:00" }, { inicio: "15:00", fim: "17:00" }],
+    5: [{ inicio: "08:30", fim: "10:30" }, { inicio: "11:00", fim: "13:00" }],
+  };
+
+  const nomesDias = {
+    1: "Segunda-Feira",
+    3: "Quarta-Feira",
+    5: "Sexta-Feira",
+  };
+
+  const diasPorSemana = { 1: [], 3: [], 5: [] };
+  const totalDias = new Date(ano, mes + 1, 0).getDate();
+
+  for (let d = 1; d <= totalDias; d++) {
+    const diaSemana = new Date(ano, mes, d).getDay();
+    if (diaSemana in diasPorSemana) {
+      diasPorSemana[diaSemana].push(d);
+    }
+  }
+
+  const container = document.getElementById("agendaColumns");
+  if (!container) return;
+  container.innerHTML = "";
+
+  [1, 3, 5].forEach((diaSemana) => {
+    const col = document.createElement("div");
+    col.className = "day-column";
+    col.innerHTML = `
+      <h3>${nomesDias[diaSemana]}</h3>
+      <i class="fa-regular fa-calendar day-icon"></i>
+    `;
+
+    diasPorSemana[diaSemana].forEach((dia) => {
+      const diaFormatado = String(dia).padStart(2, "0");
+      const mesFormatado = String(mes + 1).padStart(2, "0");
+      const label = `${diaFormatado}/${mesFormatado}`;
+
+      const group = document.createElement("div");
+      group.className = "date-group";
+
+      let html = `<span class="date-label">Dia ${label}</span>`;
+      horariosPorDia[diaSemana].forEach((h) => {
+        html += `
+          <button class="time-btn" onclick="confirmarAgendamento('${label} - ${h.inicio}')">
+            ${h.inicio} - ${h.fim}
+          </button>
+        `;
+      });
+
+      group.innerHTML = html;
+      col.appendChild(group);
+    });
+
+    container.appendChild(col);
+  });
+}
+
 function carregarEscolas() {
   const select = document.getElementById("unidadeEscolar");
-  if (!select) return; 
+  if (!select) return;
 
   listaEscolas.forEach((escola) => {
     const option = document.createElement("option");
@@ -116,6 +190,7 @@ function abrirFormulario(tipoServico) {
   if (tipoServico === "duvidas") {
     const agendaModal = document.getElementById("agendaModal");
     if (agendaModal) {
+      gerarAgendaDinamica();
       agendaModal.style.display = "flex";
       verificarDisponibilidade();
     } else {
@@ -397,7 +472,7 @@ async function enviarFormulario(e) {
     if (
       !nome.trim() ||
       !cpf.trim() ||
-      !unidade.trim() || 
+      !unidade.trim() ||
       !email.trim() ||
       !observacao.trim()
     ) {
@@ -460,7 +535,7 @@ async function enviarFormulario(e) {
       programa: programa,
       nome: nome,
       cpf: cpf,
-      unidade_escolar: unidade, 
+      unidade_escolar: unidade,
       email: email,
       observacao: observacao,
       arquivo_url: urlArquivo1,
@@ -496,6 +571,7 @@ async function uploadArquivo(file, nomeBase) {
   const { data } = _supabase.storage.from("documentos").getPublicUrl(filePath);
   return data.publicUrl;
 }
+
 document.addEventListener("DOMContentLoaded", carregarEscolas);
 
 window.abrirFormulario = abrirFormulario;
